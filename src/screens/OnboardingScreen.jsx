@@ -137,15 +137,16 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { onboardingInfo } from "../../assets/data/data";
+import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
-
-
 
 export default function OnboardingScreen() {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef();
+  const navigation = useNavigation();
 
   const handleNext = () => {
     if (activeIndex < onboardingInfo.length - 1) {
@@ -160,11 +161,14 @@ export default function OnboardingScreen() {
   };
 
   const handleLogin = () => {
-    console.log("Login pressed");
+    // console.log("Login pressed");
+    navigation.navigate("Login");
   };
 
   const handleSignUp = () => {
-    console.log("Sign up pressed");
+    // console.log("Sign up pressed");
+    navigation.navigate("Signup");
+
   };
 
   const handleGetStarted = () => {
@@ -176,11 +180,7 @@ export default function OnboardingScreen() {
       <View style={styles.slideContainer}>
         {/* Image Section */}
         <View style={styles.imageContainer}>
-          <Image
-            source={item.image}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <Image source={item.image} style={styles.image} resizeMode="cover" />
           {/* {item.isAI && (
             <View style={styles.aiOverlay}>
               <View style={styles.aiElements}>
@@ -213,7 +213,9 @@ export default function OnboardingScreen() {
 
           {/* Title and Subtitle */}
           <View style={styles.textContainer}>
-            <Text className="font-Bold text-4xl text-center px-10">{item.title}</Text>
+            <Text className="font-Bold text-4xl text-center px-10">
+              {item.title}
+            </Text>
             <Text className="font-Regular text-center ">{item.subtitle}</Text>
           </View>
 
@@ -224,34 +226,39 @@ export default function OnboardingScreen() {
                 <Pressable
                   className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center "
                   style={{
-                    width: responsiveWidth(43)
+                    width: responsiveWidth(43),
                   }}
                   onPress={handleLogin}
                   android_ripple={{ color: "rgba(255,255,255,0.1)" }}
                 >
-                  <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">Login</Text>
+                  <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+                    Login
+                  </Text>
                 </Pressable>
                 <Pressable
                   className="bg-surfaceSecondary py-4 rounded-xl flex-row items-center justify-center  "
                   style={{
-                    width: responsiveWidth(43)
+                    width: responsiveWidth(43),
                   }}
                   onPress={handleSignUp}
                   android_ripple={{ color: "rgba(109,40,217,0.1)" }}
                 >
-                  <Text className="text-textAction font-SemiBold text-[16px]">Sign Up</Text>
+                  <Text className="text-textAction font-SemiBold text-[16px]">
+                    Sign Up
+                  </Text>
                 </Pressable>
               </View>
             ) : item.isFinal ? (
               <Pressable
                 className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center gap-2"
-
                 onPress={handleNext}
                 android_ripple={{ color: "rgba(255,255,255,0.1)" }}
               >
-                <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">Get Started</Text>
+                <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+                  Get Started
+                </Text>
                 {/* <Text style={styles.arrow}>→</Text> */}
-                <MoveRight size={20} color='white' />
+                <MoveRight size={20} color="white" />
               </Pressable>
             ) : (
               <Pressable
@@ -259,26 +266,25 @@ export default function OnboardingScreen() {
                 onPress={handleNext}
                 android_ripple={{ color: "rgba(255,255,255,0.1)" }}
               >
-                <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">Next</Text>
-                <MoveRight size={20} color='white' />
-
+                <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+                  Next
+                </Text>
+                <MoveRight size={20} color="white" />
               </Pressable>
             )}
           </View>
 
           {/* Footer */}
           <View className="flex-1  justify-center items-center">
-
             <Text className="font-Regular  mb-1">@2025 Rai</Text>
           </View>
-
         </View>
       </View>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView className="flex-1 bg-white">
       <FlatList
         ref={flatListRef}
         data={onboardingInfo}
@@ -297,7 +303,7 @@ export default function OnboardingScreen() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderOnboardingItem}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -312,7 +318,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    height: height * 0.50,
+    height: height * 0.5,
     width: "100%",
     position: "relative",
   },
@@ -373,7 +379,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: responsiveWidth(5),
     paddingHorizontal: responsiveWidth(5),
     paddingTop: responsiveHeight(3),
-    gap: responsiveHeight(3)
+    gap: responsiveHeight(3),
     // justifyContent: "space-between",
   },
   dotContainer: {

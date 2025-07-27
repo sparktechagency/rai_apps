@@ -9,6 +9,7 @@ import SplashScreenAnimated from "./src/root/SplashScreenAnimated";
 import * as SplashScreen from "expo-splash-screen";
 // import useLoadFonts from "./src/utils/useLoadFonts";
 import FontProvider from "./src/utils/FontProvider";
+import AppNavigator from "./src/root/AppNavigator";
 
 // Don't auto-hide native splash
 SplashScreen.preventAutoHideAsync();
@@ -33,12 +34,14 @@ export default function App() {
           {!isReady ? (
             <SplashScreenAnimated onFinish={onSplashFinish} />
           ) : (
-            <SafeAreaView className="flex-1 items-center justify-center bg-white">
-              {/* <View > */}
-              {/* <AppNavigator /> */}
-              <OnboardingScreen />
-              {/* </View> */}
-            </SafeAreaView>
+            // <SafeAreaView className="flex-1 items-center justify-center bg-white">
+            //   {/* <View > */}
+            //   <AppNavigator />
+            //   {/* <OnboardingScreen /> */}
+            //   {/* </View> */}
+            // </SafeAreaView>
+              <AppNavigator />
+
           )}
         </SafeAreaProvider>
       </NavigationContainer>
