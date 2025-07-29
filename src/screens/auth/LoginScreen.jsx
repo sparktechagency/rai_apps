@@ -24,7 +24,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -50,8 +50,10 @@ const navigation = useNavigation();
           </View>
 
           {/* Welcome */}
-          <View className="items-center "
-            style={{ marginBottom: responsiveHeight(3) }}>
+          <View
+            className="items-center "
+            style={{ marginBottom: responsiveHeight(3) }}
+          >
             <Text className="text-[24px] font-SemiBold text-textPrimary mb-2">
               Welcome Back!
             </Text>
@@ -62,7 +64,7 @@ const navigation = useNavigation();
 
           {/* Form Section */}
           <ScrollView
-            contentContainerStyle={{ justifyContent: "center",  }}
+            contentContainerStyle={{ justifyContent: "center" }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
@@ -111,7 +113,7 @@ const navigation = useNavigation();
 
             {/* Forgot Password */}
             <Pressable
-            onPress={()=> navigation.navigate("ForgotPassword")}
+              onPress={() => navigation.navigate("ForgotPassword")}
               className="items-end"
               style={{ marginBottom: responsiveHeight(3) }}
             >
@@ -122,6 +124,7 @@ const navigation = useNavigation();
 
             {/* Login Button */}
             <Pressable
+              onPress={() => navigation.navigate("BottomNavigator")}
               className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
               style={{ marginBottom: responsiveHeight(3) }}
             >
@@ -135,9 +138,7 @@ const navigation = useNavigation();
               <Text className="text-[14px] text-textSecondary font-Medium">
                 Don't have an account?{" "}
               </Text>
-              <Pressable
-              onPress={() => navigation.navigate("Signup")}
-              >
+              <Pressable onPress={() => navigation.navigate("Signup")}>
                 <Text className="text-[14px] text-textAction font-Medium">
                   Create an account
                 </Text>

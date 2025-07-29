@@ -20,6 +20,7 @@ module.exports = {
     extend: {
       colors: {
         // surface
+        surfacePrimary: "#F5F4F7",
         surfaceAction: "#5700FE",
         surfaceActionTertiary: "#8E54FE",
         surfaceSecondary: "#F2F1F5",
@@ -37,6 +38,7 @@ module.exports = {
 
         // icon
         iconTertiary: "#C5BFD1",
+        iconActionTertiary: "#C5BFD1",
         iconPrimary: "#09020D",
         iconPrimaryInverted: "#f4f4f4",
       },

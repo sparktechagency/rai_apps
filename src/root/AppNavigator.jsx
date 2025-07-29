@@ -10,10 +10,13 @@ import VerifyCodeScreen from "../screens/auth/VerifyCodeScreen";
 import ResetPasswordScreen from "../screens/auth/ResetPasswordScreen";
 import ResetPasswordSuccessScreen from "../screens/auth/ResetPasswordSuccessScreen";
 import SetProfileScreen from "../screens/auth/SetProfileScreen";
+
+import AddItemScreen from "../create/AddItemScreen";
+import BottomNavigatorScreen from "../screens/bottomNavigator/BottomNavigatorScreen";
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false , }}>
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
@@ -24,10 +27,9 @@ const AppNavigator = () => {
         name="ResetPasswordSuccess"
         component={ResetPasswordSuccessScreen}
       />
-      <Stack.Screen
-        name="SetProfile"
-        component={SetProfileScreen}
-      />
+      <Stack.Screen name="SetProfile" component={SetProfileScreen} />
+      <Stack.Screen name="BottomNavigator" component={BottomNavigatorScreen} />
+      <Stack.Screen name="AddItem" component={AddItemScreen} />
     </Stack.Navigator>
   );
 };
