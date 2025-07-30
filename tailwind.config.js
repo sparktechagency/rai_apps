@@ -40,6 +40,7 @@ module.exports = {
         iconTertiary: "#C5BFD1",
         iconActionTertiary: "#C5BFD1",
         iconPrimary: "#09020D",
+        iconSecondary: "#81739A",
         iconPrimaryInverted: "#f4f4f4",
       },
       fontFamily: {

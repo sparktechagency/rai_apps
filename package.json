@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/urbanist": "^0.4.1",
+    "@react-native-segmented-control/segmented-control": "^2.5.7",
     "@react-navigation/bottom-tabs": "^7.4.4",
     "@react-navigation/native": "^7.1.14",
     "@react-navigation/native-stack": "^7.3.21",
@@ -22,6 +23,7 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "react": "19.0.0",
     "react-native": "0.79.5",
+    "react-native-emoji-modal": "^0.2.4",
     "react-native-otp-inputs": "^7.4.0",
     "react-native-otp-textinput": "^1.1.7",
     "react-native-reanimated": "~3.17.4",

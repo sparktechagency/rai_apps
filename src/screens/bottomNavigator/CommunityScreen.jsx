@@ -397,22 +397,14 @@ import {
   StyleSheet,
   Pressable,
   Modal,
+  FlatList,
 } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { contacts, reportReasons } from "../../../assets/data/data";
 
-const reportReasons = [
-  "I just don't like it",
-  "Hate or exploitation",
-  "Selling or promoting restricted items",
-  "Nudity or sexual activity",
-  "Violence or dangerous organizations",
-  "It's spam",
-  "Bullying or harassment",
-  "False information",
-  "Intellectual property violation",
-  "Something else",
-];
+
+import EmojiModal from "react-native-emoji-modal";
 
 const CommunityScreen = () => {
   const [posts, setPosts] = useState([
@@ -468,9 +460,12 @@ const CommunityScreen = () => {
       closeSheet();
     }
   };
+
+  const [emoji, setEmoji] = useState("");
+
   const PostCard = ({ post }) => (
     <View className="bg-white mb-4 rounded-3xl overflow-hidden">
-      <View className="flex-row items-center justify-between p-4 pb-2">
+      <View className="flex-row items-center justify-between px-4 ">
         <View className="flex-row items-center">
           <Image
             source={{ uri: post.user.avatar }}
@@ -504,20 +499,43 @@ const CommunityScreen = () => {
       </View>
 
       <View className="p-4 pt-0">
+        {/* <View className="flex-row items-center">
+          <View className="flex-row items-center mr-4">
+            <View className="relative flex-row">
+
+            <Text className="text-base">❤️</Text>
+            <Text className="text-base">💛</Text>
+            <Text className="text-base">🧡</Text>
+            </View>
+            <Text className="text-base font-medium text-gray-900">
+              {post.reactions}
+            </Text>
+          </View>
+        </View> */}
         <View className="flex-row items-center">
           <View className="flex-row items-center mr-4">
-            <Text className="text-base mr-2">\ud83d\ude0d\ud83d\udd25</Text>
+            <Pressable onPress={() => openSheet("reactions")}>
+              {/* <Pressable onPress={() => setVisible(true)}> */}
+              <View className="flex-row">
+                <Text className="text-base z-10">😍</Text>
+                <Text className="text-base -ml-2 z-20">🔥</Text>
+                <Text className="text-base -ml-2 z-30">🧡</Text>
+              </View>
+            </Pressable>
+            {/* <EmojiPicker /> */}
             <Text className="text-base font-medium text-gray-900">
               {post.reactions}
             </Text>
           </View>
         </View>
-
         <View className="flex-row items-center justify-between w-full">
           <View className="flex-row items-center">
-            <Pressable className="bg-surfaceSecondary px-4 py-1 rounded-full flex-row items-center gap-1">
+            <Pressable
+              onPress={() => openSheet("react")}
+              className="bg-surfaceSecondary px-4 py-1 rounded-full flex-row items-center gap-1"
+            >
               <Text className="text-sm text-gray-600">Tap to react</Text>
-              <MoveRight color="white" />
+              <MoveRight color="white" size={16} />
             </Pressable>
             <Pressable onPress={() => openSheet("share")} className="p-2 ml-2">
               <Image source={require("../../../assets/images/send.png")} />
@@ -531,11 +549,27 @@ const CommunityScreen = () => {
     </View>
   );
 
+  const renderContactItem = ({ item }) => (
+    <Pressable
+      className="flex-row items-center px-5 py-3 border-b border-gray-100 bg-white"
+      // onPress={() => handleContactPress(item)}
+    >
+      <Image
+        source={{ uri: item.avatar }}
+        className="w-12 h-12 rounded-full mr-3"
+      />
+      <Text className="flex-1 text-base font-medium text-gray-900">
+        {item.name}
+      </Text>
+      <Text className="text-xl ml-2">{item.emoji}</Text>
+    </Pressable>
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View
-        className="bg-white px-4 py-3 flex-row items-center justify-between"
-        style={styles.header}
+        className="bg-white p-4 flex-row items-center justify-between"
+      
       >
         <View className="flex-row items-center">
           <Image
@@ -564,7 +598,10 @@ const CommunityScreen = () => {
         </View>
       </View>
 
-      <ScrollView className="flex-1 px-0 py-4">
+      <ScrollView
+        className="flex-1 "
+        showsVerticalScrollIndicator={false}
+      >
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
@@ -677,15 +714,95 @@ const CommunityScreen = () => {
             </View>
           </View>
         )}
+        {activeSheet === "reactions" && (
+          // <View className="flex-1 bg-black/50 justify-center items-center">
+          //   <View className="bg-white rounded-2xl w-[90%] h-[80%] p-4">
+          //     {/* <View className="flex-row justify-between items-center mb-4">
+          //       <Text className="font-Bold text-xl">Reactions</Text>
+          //       <Pressable onPress={closeSheet}>
+          //         <X />
+          //       </Pressable>
+          //     </View> */}
+
+          //     <FlatList
+          //       data={contacts}
+          //       renderItem={renderContactItem}
+          //       keyExtractor={(item) => item.id}
+          //       showsVerticalScrollIndicator={true}
+          //       className="flex-1"
+          //     />
+          //   </View>
+          // </View>
+          <Pressable
+            onPress={closeSheet}
+            className="flex-1 bg-black/50 justify-center items-center"
+          >
+            {/* Prevent inner modal box from closing when tapped */}
+            <Pressable
+              onPress={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl w-[90%] h-[50%] p-4"
+            >
+              {/* <Text className="font-Bold text-xl mb-4">Reactions</Text> */}
+
+              <FlatList
+                data={contacts}
+                renderItem={renderContactItem}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={true}
+                className="flex-1"
+              />
+            </Pressable>
+          </Pressable>
+        )}
+        {activeSheet === "react" && (
+          // <Pressable
+          //   className="flex-1 bg-black/50 justify-center items-center"
+          //   // onPress={closeSheet}
+          // >
+          //   <Pressable
+          //     onPress={(e) => e.stopPropagation()}
+          //     style={styles.emojiPickerContainer}
+          //   >
+          //     <EmojiSelector
+          //       onEmojiSelected={(emoji) => {
+          //         console.log("Selected Emoji:", emoji); // For debugging
+          //         // closeSheet();
+          //       }}
+          //       category={Categories.all}
+          //       showTabs={true}
+          //       showSearchBar={true}
+          //       showHistory={true}
+          //       columns={5}
+          //     />
+          //   </Pressable>
+          // </Pressable>
+          <EmojiModal
+            emojiSize={32}
+            visible={activeSheet === "react"}
+            onEmojiSelected={(emojiObj) => {
+              setEmoji(emojiObj.emoji);
+              closeSheet();
+            }}
+            onPressOutside={() => closeSheet()}
+          />
+        )}
       </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    paddingTop: 50,
+  // header: {
+  //   paddingTop: 50,
+  // },
+  emojiPickerContainer: {
+    height: 350, // ADD THIS
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 16,
+    overflow: "hidden",
   },
+
   bottomSheet: {
     position: "absolute",
     left: 0,
@@ -719,7 +836,7 @@ const styles = StyleSheet.create({
     // left: responsiveWidth(5),
     right: responsiveWidth(26),
   },
-    closeText2: {
+  closeText2: {
     fontSize: 16,
     color: "#888",
     position: "absolute",

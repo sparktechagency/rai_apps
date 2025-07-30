@@ -410,6 +410,7 @@ import PlannerScreen from "./PlannerScreen";
 import AccountScreen from "./AccountScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { responsiveWidth } from "react-native-responsive-dimensions";
+import AccountStack from "./accountStack/AcountStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -659,7 +660,7 @@ const BottomNavigatorScreen = () => {
       <Tab.Screen name="Wardrobe" component={WardrobeScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
       <Tab.Screen name="Planner" component={PlannerScreen} />
-      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Account" component={AccountStack} />
     </Tab.Navigator>
   );
 };
