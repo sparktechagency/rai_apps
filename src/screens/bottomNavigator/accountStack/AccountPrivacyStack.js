@@ -4,6 +4,7 @@ import AccountPrivacyEditScreen from "./AccountPrivacyEditScreen";
 import AccountPrivacyPasswordScreen from "./AccountPrivacyPasswordScreen";
 import AccountPrivacyLanguageScreen from "./AccountPrivacyLanguageScreen";
 import AccountPrivacyScreen from "./AccountPrivacyScreen";
+import AccountPrivacyPasswordStack from "./AccountPrivacyPasswordStack";
 
 const Stack = createNativeStackNavigator();
 const AccountPrivacyStack = () => {
@@ -23,7 +24,7 @@ const AccountPrivacyStack = () => {
       />
       <Stack.Screen
         name="AccountPrivacyPassword"
-        component={AccountPrivacyPasswordScreen}
+        component={AccountPrivacyPasswordStack}
       />
       <Stack.Screen
         name="AccountPrivacyLanguage"

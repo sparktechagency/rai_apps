@@ -110,7 +110,7 @@
 //   View,
 //   Text,
 //   Image,
-//   TouchableOpacity,
+//   Pressable,
 //   Modal,
 //   StyleSheet,
 // } from "react-native";
@@ -145,13 +145,13 @@
 //         visible={modalVisible}
 //         onRequestClose={closeModal}
 //       >
-//         <TouchableOpacity
+//         <Pressable
 //           style={styles.modalOverlay}
 //           activeOpacity={1}
 //           onPress={closeModal}
 //         >
 //           <View style={styles.modalContent}>
-//             <TouchableOpacity
+//             <Pressable
 //               style={styles.modalItem}
 //               onPress={() => {
 //                 closeModal();
@@ -160,9 +160,9 @@
 //               }}
 //             >
 //               <Text style={styles.modalItemText}>Add Item</Text>
-//             </TouchableOpacity>
+//             </Pressable>
 
-//             <TouchableOpacity
+//             <Pressable
 //               style={styles.modalItem}
 //               onPress={() => {
 //                 closeModal();
@@ -171,9 +171,9 @@
 //               }}
 //             >
 //               <Text style={styles.modalItemText}>Create an outfit</Text>
-//             </TouchableOpacity>
+//             </Pressable>
 
-//             <TouchableOpacity
+//             <Pressable
 //               style={styles.modalItem}
 //               onPress={() => {
 //                 closeModal();
@@ -182,9 +182,9 @@
 //               }}
 //             >
 //               <Text style={styles.modalItemText}>Create lookbook</Text>
-//             </TouchableOpacity>
+//             </Pressable>
 //           </View>
-//         </TouchableOpacity>
+//         </Pressable>
 //       </Modal>
 
 //       <View style={styles.tabBar}>
@@ -261,7 +261,7 @@
 //           };
 
 //           return (
-//             <TouchableOpacity
+//             <Pressable
 //               key={index}
 //               onPress={onPress}
 //               style={styles.tabItem}
@@ -275,18 +275,18 @@
 //               >
 //                 {label}
 //               </Text>
-//             </TouchableOpacity>
+//             </Pressable>
 //           );
 //         })}
 
-//         <TouchableOpacity
+//         <Pressable
 //           onPress={openModal}
 //           style={styles.plusButtonContainer}
 //         >
 //           <View style={styles.plusButton}>
 //             <Text style={styles.plusIcon}>+</Text>
 //           </View>
-//         </TouchableOpacity>
+//         </Pressable>
 //       </View>
 //     </View>
 //   );
@@ -399,7 +399,7 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
+  Pressable,
   Modal,
   StyleSheet,
 } from "react-native";
@@ -409,8 +409,12 @@ import CommunityScreen from "./CommunityScreen";
 import PlannerScreen from "./PlannerScreen";
 import AccountScreen from "./AccountScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { responsiveWidth } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 import AccountStack from "./accountStack/AcountStack";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
@@ -420,111 +424,43 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
+
   return (
     <View style={styles.tabBarContainer}>
       {/* Modal (Side-aligned) */}
       <Modal transparent visible={modalVisible} animationType="fade">
-        <TouchableOpacity
-          style={styles.sideModalOverlay}
+        <Pressable
+          className="flex-1 justify-end items-center bg-black/40"
           activeOpacity={1}
           onPress={closeModal}
         >
-          <View style={styles.sideModalContent}>
-            {["Add Item", "Create an outfit", "Create lookbook"].map(
-              (label, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={styles.modalItem}
-                  onPress={() => {
-                    closeModal();
-                    // console.log(`${label} pressed`);
-                  }}
-                >
-                  <Text style={styles.modalItemText}>{label}</Text>
-                </TouchableOpacity>
-              )
-            )}
+          <View style={styles.modalContainer}>
+            <View style={styles.sideModalContent}>
+              {["Add Item", "Create an outfit", "Create lookbook"].map(
+                (label, i) => (
+                  <Pressable
+                    key={i}
+                    style={{
+                      padding: responsiveHeight(1.5)
+                    }}
+                    onPress={() => {
+                      closeModal();
+                      // console.log(`${label} pressed`);
+                      navigation.navigate('AddItem')
+                    }}
+                  >
+                    <Text className="text-center font-SemiBold text-base text-textPrimary">{label}</Text>
+                  </Pressable>
+                )
+              )}
+            </View>
+            {/* Triangle tip pointing down */}
+            <View style={styles.triangleTip} />
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </Modal>
 
       {/* Bottom Tab */}
-      {/* <View style={styles.tabBar}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const label = options.tabBarLabel || route.name;
-          const isFocused = state.index === index;
-
-          const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
-
-          const renderTabIcon = () => {
-            const base = "../../../assets/images/";
-            const icons = {
-              Wardrobe: {
-                active: require("../../../assets/images/war_active.webp"),
-                inactive: require("../../../assets/images/war_inactive.webp"),
-              },
-              Community: {
-                active: require("../../../assets/images/com_active.webp"),
-                inactive: require("../../../assets/images/com_inactive.webp"),
-              },
-              Planner: {
-                active: require("../../../assets/images/plan_active.webp"),
-                inactive: require("../../../assets/images/plan_inactive.webp"),
-              },
-              Account: {
-                active: require("../../../assets/images/acc_active.webp"),
-                inactive: require("../../../assets/images/acc_inactive.webp"),
-              },
-            };
-
-            const icon = isFocused
-              ? icons[route.name]?.active
-              : icons[route.name]?.inactive;
-
-            if (!icon) return null;
-
-            return <Image source={icon} style={styles.tabIcon} />;
-          };
-
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={onPress}
-              style={styles.tabItem}
-            >
-              {renderTabIcon()}
-              <Text
-                style={[
-                  styles.tabLabel,
-                  { color: isFocused ? "#5700FE" : "#6b7280" },
-                ]}
-              >
-                {label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-
-        <TouchableOpacity
-          onPress={openModal}
-          style={styles.plusButtonContainer}
-        >
-          <View style={styles.plusButton}>
-            <Text style={styles.plusIcon}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </View> */}
 
       <View style={styles.tabBar}>
         {/* Left Group: Wardrobe + Community */}
@@ -562,7 +498,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
               : icons[route.name]?.inactive;
 
             return (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 onPress={onPress}
                 style={styles.tabItem}
@@ -576,20 +512,20 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 >
                   {label}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </View>
 
         {/* Plus Button Centered */}
-        <TouchableOpacity
+        <Pressable
           onPress={openModal}
           style={styles.plusButtonContainer}
         >
           <View style={styles.plusButton}>
             <Text style={styles.plusIcon}>+</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Right Group: Planner + Account */}
         <View style={styles.tabGroup}>
@@ -626,7 +562,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
               : icons[route.name]?.inactive;
 
             return (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 onPress={onPress}
                 style={styles.tabItem}
@@ -640,7 +576,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 >
                   {label}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             );
           })}
         </View>
@@ -711,7 +647,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 35,
     left: "50%",
-    transform: [{ translateX: -responsiveWidth(2) }],
+    transform: [{ translateX: -responsiveWidth(3.5) }],
     zIndex: 10,
   },
   plusButton: {
@@ -735,24 +671,45 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingBottom: 110, // position near tab bar
   },
+  modalContainer: {
+    alignItems: "center",
+    marginBottom: responsiveHeight(10),
+  },
   sideModalContent: {
     backgroundColor: "white",
     borderRadius: 12,
-    paddingVertical: 10,
     width: 180,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
+    // elevation: 4,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.15,
+    // shadowRadius: 4,
+    overflow: "hidden", // Ensures border radius is respected
   },
-  modalItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+
+  modalItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0", // Very light gray border
   },
-  modalItemText: {
-    fontSize: 14,
-    color: "#333",
+  modalText: {
+    fontSize: 16,
+    color: "#333333",
+    textAlign: "center",
+    fontWeight: "400",
+  },
+  triangleTip: {
+    width: 30,
+    height: 30,
+    backgroundColor: "white",
+    transform: [{ rotate: "45deg" }],
+    marginTop: -18,
+    borderRadius: 6,
+    zIndex: -10,
+    // elevation: 4,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.15,
+    // shadowRadius: 4,
   },
 });
 

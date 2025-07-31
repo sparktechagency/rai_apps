@@ -8,12 +8,12 @@ import AccountPrivacyStack from "./AccountPrivacyStack";
 const Stack = createNativeStackNavigator();
 const AccountStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false , }} initialRouteName="Account">
-      <Stack.Screen name="Account" component={AccountScreen } />
+    <Stack.Navigator screenOptions={{ headerShown: false , }} initialRouteName="AccountProfile">
+      <Stack.Screen name="AccountProfile" component={AccountScreen } />
       {/* <Stack.Screen name="AccountPrivacy" component={AccountPrivacyScreen } /> */}
       <Stack.Screen name="AccountFeedback" component={AccountFeedbackScreen} />
 
-      <Stack.Screen name="AccountPrivacy" component={AccountPrivacyStack} />
+      <Stack.Screen name="AccountPrivacyStack" component={AccountPrivacyStack} />
     </Stack.Navigator>
   );
 };

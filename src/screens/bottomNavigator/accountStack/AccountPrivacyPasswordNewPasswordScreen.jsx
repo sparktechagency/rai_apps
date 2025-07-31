@@ -14,7 +14,7 @@ import {
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const AccountFeedbackScreen = ({ navigation }) => {
+const AccountPrivacyPasswordNewPasswordScreen = ({ navigation }) => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -64,7 +64,7 @@ const AccountFeedbackScreen = ({ navigation }) => {
       >
         {/* <StatusBar barStyle="dark-content" backgroundColor="#fff" /> */}
         {/* Header */}
-        <View className="flex-row items-center  px-5 ">
+        <View className="flex-row items-center  p-5 ">
           <Pressable
             onPress={handleGoBack}
             activeOpacity={0.7}
@@ -73,7 +73,7 @@ const AccountFeedbackScreen = ({ navigation }) => {
             <ArrowLeft color="#81739A" />
           </Pressable>
           <Text className="flex-1 text-center text-xl font-SemiBold text-textPrimary">
-            Feedback & Help
+            Password
           </Text>
           <View
             style={{
@@ -89,35 +89,37 @@ const AccountFeedbackScreen = ({ navigation }) => {
           keyboardShouldPersistTaps="handled"
         >
           <View className="px-5 pt-8">
-            <Text className="text-3xl font-SemiBold text-black text-center mb-3">
+            {/* <Text className="text-3xl font-SemiBold text-black text-center mb-3">
               Did we forget something?
             </Text>
             <Text className="text-md text-gray-500 text-center leading-6 mb-10 px-2 font-Medium">
               We don't bite. Get in touch with our support team if you've got
               any.
-            </Text>
+            </Text> */}
 
             {/* Title Input */}
             <View className="mb-6">
-              <Text className="text-lg font-Medium text-black mb-2">Title</Text>
+              <Text className="text-lg font-Medium text-black mb-2">
+                Current Password
+              </Text>
               <TextInput
                 className={`border rounded-xl px-4 py-3 h-12 text-base font-Medium text-black ${
                   title ? "border-borderAction bg-white" : "border-gray-200 "
                 }`}
-                placeholder="Enter Title"
+                placeholder="Type a strong password"
                 placeholderTextColor="#C7C7CC"
                 value={title}
                 onChangeText={setTitle}
                 maxLength={100}
                 returnKeyType="next"
-                blurOnSubmit={false}
+                // blurOnSubmit={false}
               />
             </View>
 
             {/* Description Input */}
             <View className="mb-6">
               <Text className="text-lg font-Medium text-black mb-2">
-                Description
+                New Password
               </Text>
               <TextInput
                 className={`border rounded-xl px-4 py-3 min-h-[120px] text-base font-Medium text-black ${
@@ -125,7 +127,7 @@ const AccountFeedbackScreen = ({ navigation }) => {
                     ? "border-borderAction bg-white"
                     : "border-gray-200 "
                 }`}
-                placeholder="Tell us more about your feedback..."
+                placeholder="Type a strong password"
                 placeholderTextColor="#C7C7CC"
                 value={description}
                 onChangeText={setDescription}
@@ -136,17 +138,36 @@ const AccountFeedbackScreen = ({ navigation }) => {
                 returnKeyType="done"
               />
             </View>
+
+            <View className="mb-6">
+              <Text className="text-lg font-Medium text-black mb-2">
+                Confirm Password
+              </Text>
+              <TextInput
+                className={`border rounded-xl px-4 py-3 min-h-[120px] text-base font-Medium text-black ${
+                  description
+                    ? "border-borderAction bg-white"
+                    : "border-gray-200 "
+                }`}
+                placeholder="Re-type password"
+                placeholderTextColor="#C7C7CC"
+                value={description}
+                onChangeText={setDescription}
+                multiline
+                numberOfLines={8}
+                textAlignVertical="top"
+                maxLength={1000}
+                returnKeyType="done"
+              />
+            </View>
+
             <View className="py-5">
               <Pressable
                 onPress={handleSend}
                 disabled={!isFormValid || isSubmitting}
                 activeOpacity={0.8}
                 className={`p-4 rounded-2xl justify-center items-center shadow-md ${
-                 
-                     isSubmitting
-                      ? "bg-indigo-300"
-                      : "bg-surfaceAction"
-                    
+                  isSubmitting ? "bg-indigo-300" : "bg-surfaceAction"
                 }`}
               >
                 <Text
@@ -167,4 +188,4 @@ const AccountFeedbackScreen = ({ navigation }) => {
   );
 };
 
-export default AccountFeedbackScreen;
+export default AccountPrivacyPasswordNewPasswordScreen;

@@ -171,3 +171,46 @@ export const outfits = [
     time: "6:00 PM | Jan 11, 2025",
   },
 ];
+
+export const categories = [
+  "Tops",
+  "Bottoms",
+  "Dresses",
+  "Outerwear",
+  "Footwear",
+  "Accessories",
+  "Activewear",
+  "Lingerie & Sleepwear",
+  "Swimwear",
+  "Formalwear",
+  "Casualwear",
+  "Ethnic Wear",
+  "Denim",
+  "Suits & Blazers",
+  "Handbags & Wallets",
+  "Jewelry",
+  "Hats & Caps",
+  "Scarves & Gloves",
+  "Socks & Hosiery",
+  "Kids’ Fashion"
+];
+
+export const seasons = ["Spring", "Summer", "Autumn", "Winter"];
+
+export const styles = [
+  "Casual",
+  "Formal",
+  "Streetwear",
+  "Bohemian",
+  "Vintage",
+  "Athleisure",
+  "Chic",
+  "Preppy",
+  "Gothic",
+  "Minimalist",
+  "Punk",
+  "Romantic",
+  "Business Casual",
+  "Sporty",
+  "Retro"
+];

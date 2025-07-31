@@ -1,5 +1,9 @@
-import { EllipsisVertical } from "lucide-react-native";
-import React, { useState } from "react";
+import {
+  EllipsisVertical,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react-native";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +12,14 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ItemTab from "./tabComponents/ItemTab";
 import LookbookTab from "./tabComponents/LookbookTab";
 import OutfitTab from "./tabComponents/OutfitTab";
-
+import { useRoute } from "@react-navigation/native";
 
 const TAB_IDS = {
   Items: "Items",
@@ -30,8 +35,16 @@ const TAB_OPTIONS = [
 
 const WardrobeScreen = () => {
   const [activeTab, setActiveTab] = useState("Items");
+  const [searchText, setSearchText] = useState("");
 
-  const tabs = ["Items", "Outfits", "Lookbooks"];
+  const route = useRoute();
+  const { tab } = route.params || {};
+
+  // console.log(tab);
+
+  useEffect(() => {
+    setActiveTab(tab || "Items");
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -55,7 +68,9 @@ const WardrobeScreen = () => {
             <Text className="text-lg font-Bold text-textPrimary">
               Hey, Mahfuz !
             </Text>
-            <Text className="text-base font-Regular text-textSecondary">Explore your wardrobe</Text>
+            <Text className="text-base font-Regular text-textSecondary">
+              Explore your wardrobe
+            </Text>
           </View>
         </View>
 
@@ -68,7 +83,33 @@ const WardrobeScreen = () => {
           </Pressable>
         </View>
       </View>
+      {tab && (
+        <View className="flex-row items-center px-4 py-2 bg-white gap-3">
+          {/* Search Input */}
+          <View className="flex-1 flex-row items-center  border border-gray-200 rounded-2xl px-4 py-1 ">
+            {/* Search Icon */}
+            <Search size={18} color="#C5BFD1" />
 
+            {/* Text Input */}
+            <TextInput
+              className="flex-1 text-base text-textPrimary px-2 font-Medium"
+              placeholder="Search"
+              placeholderTextColor="#9ca3af"
+              value={searchText}
+              onChangeText={setSearchText}
+              returnKeyType="search"
+            />
+          </View>
+
+          {/* Filter Button */}
+          <Pressable
+            className="p-4 bg-surfaceAction rounded-xl items-center justify-center"
+            // onPress={handleFilter}
+          >
+            <SlidersHorizontal size={20} color={'white'} />
+          </Pressable>
+        </View>
+      )}
       {/* Tab Navigation */}
       <View className="bg-white px-4 py-2 flex-row">
         {TAB_OPTIONS.map((tab) => (
@@ -96,10 +137,9 @@ const WardrobeScreen = () => {
       
       </ScrollView> */}
 
-      {activeTab === TAB_IDS.Items && <ItemTab />}
+      {activeTab === TAB_IDS.Items && <ItemTab tab={tab === TAB_IDS.Items} />}
       {activeTab === TAB_IDS.Outfit && <OutfitTab />}
       {activeTab === TAB_IDS.Lookbooks && <LookbookTab />}
-
     </SafeAreaView>
   );
 };

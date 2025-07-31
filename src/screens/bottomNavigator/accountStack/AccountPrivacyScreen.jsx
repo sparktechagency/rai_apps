@@ -24,7 +24,7 @@ const MenuItem = ({ icon: Icon, title, onPress }) => (
         strokeWidth={1.5}
         className="text-textPrimary font-Medium text-lg"
       />
-      <Text className="text-base text-black">{title}</Text>
+      <Text className="text-base text-black font-Medium">{title}</Text>
     </View>
     <ChevronRight size={18} strokeWidth={1.5} className="text-gray-400" />
   </Pressable>
@@ -39,7 +39,7 @@ const AccountPrivacyScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center  px-5 ">
+      <View className="flex-row items-center  p-5 ">
         <Pressable
           onPress={handleGoBack}
           className="w-10 h-10 items-center justify-center -ml-2"
@@ -60,7 +60,7 @@ const AccountPrivacyScreen = () => {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 20 }}
+        // contentContainerStyle={{ paddingTop: 20 }}
       >
         <View className="bg-white">
           <MenuItem
@@ -71,17 +71,17 @@ const AccountPrivacyScreen = () => {
           <MenuItem
             icon={SquarePen}
             title="Edit profile"
-            onPress={() => console.log("Edit profile pressed")}
+            onPress={() => navigation.navigate('AccountPrivacyEdit')}
           />
           <MenuItem
             icon={LockKeyhole}
             title="Password & Privacy"
-            onPress={() => console.log("Password & Privacy pressed")}
+            onPress={() => navigation.navigate('AccountPrivacyPassword')}
           />
           <MenuItem
             icon={Languages}
             title="Language"
-            onPress={() => console.log("Language pressed")}
+            onPress={() => navigation.navigate('AccountPrivacyLanguage')}
           />
         </View>
       </ScrollView>

@@ -118,7 +118,7 @@ const AccountScreen = () => {
             title="Privacy & Settings"
             className=""
             rightElement={<ChevronRight size={20} stroke="#000" />}
-            onPress={() => navigation.navigate('AccountPrivacy')}
+            onPress={() => navigation.navigate('AccountPrivacyStack')}
           />
 
           <MenuItem

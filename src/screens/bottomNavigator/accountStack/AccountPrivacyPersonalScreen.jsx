@@ -35,9 +35,9 @@ const AccountPrivacyPersonalScreen = ({ navigation }) => {
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text className="text-base font-semibold text-black mb-2">{label}</Text>
+      <Text className="text-base font-SemiBold text-black mb-2">{label}</Text>
       <Text
-        className={`text-base font-normal leading-[22px] ${
+        className={`text-base font-Rrgular leading-[22px] ${
           value ? "text-[#333]" : "text-[#C7C7CC] italic"
         }`}
       >
@@ -55,7 +55,7 @@ const AccountPrivacyPersonalScreen = ({ navigation }) => {
       {/* <StatusBar barStyle="dark-content" backgroundColor="#fff" /> */}
 
       {/* Header */}
-      <View className="flex-row items-center  px-5 ">
+      <View className="flex-row items-center  p-5 ">
         <Pressable
           onPress={handleGoBack}
           className="w-10 h-10 justify-center items-center -ml-2"
