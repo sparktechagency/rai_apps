@@ -192,7 +192,7 @@ export const categories = [
   "Hats & Caps",
   "Scarves & Gloves",
   "Socks & Hosiery",
-  "Kids’ Fashion"
+  "Kids’ Fashion",
 ];
 
 export const seasons = ["Spring", "Summer", "Autumn", "Winter"];
@@ -212,5 +212,13 @@ export const styles = [
   "Romantic",
   "Business Casual",
   "Sporty",
-  "Retro"
+  "Retro",
+];
+
+["Add Item", "Create an outfit", "Create lookbook"];
+
+export const centralModalOption = [
+  { id: 1, title: "Add Item", path: "AddItem" },
+  { id: 2, title: "Create an outfit", path: "CreateOutfit" },
+  { id: 2, title: "Create lookbook", path: "CreateLookbook" },
 ];

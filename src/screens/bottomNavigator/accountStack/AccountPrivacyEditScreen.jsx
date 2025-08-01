@@ -65,6 +65,7 @@ const AccountPrivacyEditScreen = ({ navigation }) => {
   };
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  
   const GenderOption = ({ title }) => (
     <TouchableOpacity
       className="flex-row items-center gap-2"

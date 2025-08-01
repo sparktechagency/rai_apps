@@ -7,7 +7,11 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import { responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
+import { useNavigation } from "@react-navigation/native";
 
 const categories = [
   { id: "all", name: "All" },
@@ -15,7 +19,7 @@ const categories = [
   { id: "category2", name: "Category 2" },
 ];
 
-const products = [
+export const products = [
   {
     id: 1,
     name: "T-Shirt",
@@ -43,9 +47,9 @@ const products = [
 ];
 
 const ItemTab = ({ tab }) => {
-  console.log("LINE AT 5", tab);
+  // console.log("LINE AT 5", tab);
   const [activeCategory, setActiveCategory] = useState("All");
-
+  const navigation = useNavigation();
   const filteredProducts =
     activeCategory === "All"
       ? products
@@ -69,9 +73,7 @@ const ItemTab = ({ tab }) => {
           width: responsiveWidth(16),
           height: responsiveWidth(16),
         }}
-      >
-       
-      </View>
+      ></View>
       <Text
         className={`text-md font-Medium ${
           activeCategory === item.name ? "text-gray-900" : "text-gray-500"
@@ -83,20 +85,14 @@ const ItemTab = ({ tab }) => {
   );
 
   const renderProductItem = ({ item, index }) => (
-    <View className={`flex-1 max-w-[48%] ${index % 2 === 1 ? "ml-2" : ""}`}>
+    <Pressable
+      onPress={() => navigation.navigate("AddItemEdit")}
+      className={`flex-1 max-w-[48%] `}
+    >
       {/* Product Image Container */}
-      <View className="bg-surfaceSecondary rounded-lg aspect-square items-center justify-center mb-3 overflow-hidden relative">
-        {/* T-Shirt Mockup */}
-        <View className="w-20 h-24 bg-green-700 rounded-t-lg items-center justify-center relative">
-          {/* Green text on shirt */}
-          <Text className="text-green-400 text-xs font-bold -rotate-12">
-            PREMIUM
-          </Text>
-          {/* Left sleeve */}
-          <View className="absolute w-8 h-12 bg-green-700 top-2 left-[-16px] rounded-tl-[20px] rounded-bl-[20px]" />
-          {/* Right sleeve */}
-          <View className="absolute w-8 h-12 bg-green-700 top-2 right-[-16px] rounded-tr-[20px] rounded-br-[20px]" />
-        </View>
+
+      <View className="bg-surfaceSecondary rounded-lg aspect-square items-center justify-center  overflow-hidden relative">
+        <Image source={require("../../../../assets/images/shirt.png")} />
       </View>
 
       {/* Product Info */}
@@ -104,9 +100,11 @@ const ItemTab = ({ tab }) => {
         <Text className="text-lg text-textPrimary font-SemiBold">
           {item.name}
         </Text>
-        <Text className="text-md text-textPrimary font-Medium">{item.description}</Text>
+        <Text className="text-md text-textPrimary font-Medium">
+          {item.description}
+        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 
   return (
@@ -121,7 +119,9 @@ const ItemTab = ({ tab }) => {
       }}
     >
       {tab ? (
-        <ScrollView className="flex-1 bg-white ">
+        <ScrollView className="flex-1 bg-white "
+        showsVerticalScrollIndicator={false}
+        >
           {/* Category Filter */}
           <FlatList
             data={categories}
@@ -129,7 +129,10 @@ const ItemTab = ({ tab }) => {
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: responsiveHeight(2),  columnGap: responsiveWidth(4) }}
+            contentContainerStyle={{
+              paddingBottom: responsiveHeight(2),
+              columnGap: responsiveWidth(4),
+            }}
           />
 
           {/* Product Grid */}
@@ -138,7 +141,10 @@ const ItemTab = ({ tab }) => {
             renderItem={renderProductItem}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
-            columnWrapperStyle={{ justifyContent: "space-between" }}
+            columnWrapperStyle={{
+              justifyContent: "space-between",
+              gap: responsiveWidth(4),
+            }}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ rowGap: responsiveWidth(3) }}
           />

@@ -386,7 +386,7 @@ const AddItemScreen = () => {
             onPress={handleNext}
           >
             <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
-              Next
+              Apply
             </Text>
           </Pressable>
 

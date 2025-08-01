@@ -880,9 +880,14 @@
 //   },
 // });
 
-
-import { EllipsisVertical, Bell, Edit, Trash2, BellRing } from "lucide-react-native";
-import React, { useState } from "react";
+import {
+  EllipsisVertical,
+  Bell,
+  Edit,
+  Trash2,
+  BellRing,
+} from "lucide-react-native";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -897,26 +902,32 @@ import {
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomTimePicker from "./tabComponents/CustomTimePicker";
+import { useNavigation } from "@react-navigation/native";
+import { DropdownMenu, Sidebar } from "./WardrobeScreen";
 
-
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 // Sample data - replace with your actual data import
 const outfits = [
-  { id: '1', name: 'Summer Outfit', time: '10:30 AM' },
-  { id: '2', name: 'Business Casual', time: '09:00 AM' },
-  { id: '3', name: 'Evening Dress', time: '07:00 PM' },
+  { id: "1", name: "Summer Outfit", time: "10:30 AM" },
+  { id: "2", name: "Business Casual", time: "09:00 AM" },
+  { id: "3", name: "Evening Dress", time: "07:00 PM" },
 ];
 
 const PlannerScreen = () => {
   const [modalVisible, setModalVisible] = useState(false); // Context menu modal
   const [reminderModalVisible, setReminderModalVisible] = useState(false); // Time picker modal
-  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] = useState(false); // Delete confirm modal
+  const [deleteConfirmModalVisible, setDeleteConfirmModalVisible] =
+    useState(false); // Delete confirm modal
 
   const [selectedOutfit, setSelectedOutfit] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-  const [reminderTime, setReminderTime] = useState({ hour: '1', minute: '00', period: 'AM' });
-  
+  const [reminderTime, setReminderTime] = useState({
+    hour: "1",
+    minute: "00",
+    period: "AM",
+  });
+
   const scaleAnimation = useState(new Animated.Value(0))[0];
 
   const handleMenuPress = (outfit, event) => {
@@ -973,7 +984,12 @@ const PlannerScreen = () => {
   };
 
   const handleTimeConfirm = (time) => {
-    console.log("Reminder set for:", selectedOutfit?.name, "at", `${time.hour}:${time.minute} ${time.period}`);
+    console.log(
+      "Reminder set for:",
+      selectedOutfit?.name,
+      "at",
+      `${time.hour}:${time.minute} ${time.period}`
+    );
     setReminderTime(time);
     setReminderModalVisible(false);
     setSelectedOutfit(null);
@@ -1017,11 +1033,30 @@ const PlannerScreen = () => {
     </View>
   );
 
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
+
+  const ellipsisRef = useRef(null);
+
+  const navigation = useNavigation();
+
+  const handleEllipsisPress = () => {
+    if (ellipsisRef.current) {
+      ellipsisRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setDropdownPosition({ x: pageX, y: pageY + height });
+        setShowDropdown(true);
+      });
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-white p-4 flex-row items-center justify-between">
-        <View className="flex-row items-center">
+        <Pressable
+          onPress={() => setShowSidebar(true)}
+          className="flex-row items-center"
+        >
           <Image
             source={{
               uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
@@ -1037,12 +1072,19 @@ const PlannerScreen = () => {
               Explore your community
             </Text>
           </View>
-        </View>
+        </Pressable>
         <View className="flex-row items-center">
-          <Pressable className="p-2 mr-2">
+          <Pressable
+            onPress={() => navigation.navigate("Notification")}
+            className="p-2 mr-2"
+          >
             <Image source={require("../../../assets/images/noti.webp")} />
           </Pressable>
-          <Pressable className="p-2">
+          <Pressable
+            ref={ellipsisRef}
+            onPress={handleEllipsisPress}
+            className="p-2"
+          >
             <EllipsisVertical />
           </Pressable>
         </View>
@@ -1097,10 +1139,7 @@ const PlannerScreen = () => {
                 },
               ]}
             >
-              <Pressable
-                activeOpacity={1}
-                onPress={(e) => e.stopPropagation()}
-              >
+              <Pressable activeOpacity={1} onPress={(e) => e.stopPropagation()}>
                 {/* Reminder Option */}
                 <Pressable
                   className="flex-row items-center px-4 py-3 border-b border-gray-100"
@@ -1197,6 +1236,13 @@ const PlannerScreen = () => {
           </Pressable>
         </Pressable>
       </Modal>
+
+      <DropdownMenu
+        visible={showDropdown}
+        onClose={() => setShowDropdown(false)}
+        position={dropdownPosition}
+      />
+      <Sidebar visible={showSidebar} onClose={() => setShowSidebar(false)} />
     </SafeAreaView>
   );
 };

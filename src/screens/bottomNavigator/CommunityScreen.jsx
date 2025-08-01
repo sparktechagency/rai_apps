@@ -387,7 +387,7 @@
 // export default CommunityScreen;
 
 import { EllipsisVertical, MoveRight, X } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -403,8 +403,9 @@ import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { contacts, reportReasons } from "../../../assets/data/data";
 
-
 import EmojiModal from "react-native-emoji-modal";
+import { DropdownMenu, Sidebar } from "./WardrobeScreen";
+import { useNavigation } from "@react-navigation/native";
 
 const CommunityScreen = () => {
   const [posts, setPosts] = useState([
@@ -564,14 +565,26 @@ const CommunityScreen = () => {
       <Text className="text-xl ml-2">{item.emoji}</Text>
     </Pressable>
   );
-
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
+  const ellipsisRef = useRef(null);
+  const navigation = useNavigation();
+  const handleEllipsisPress = () => {
+    if (ellipsisRef.current) {
+      ellipsisRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setDropdownPosition({ x: pageX, y: pageY + height });
+        setShowDropdown(true);
+      });
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View
-        className="bg-white p-4 flex-row items-center justify-between"
-      
-      >
-        <View className="flex-row items-center">
+      <View className="bg-white p-4 flex-row items-center justify-between">
+        <Pressable
+          onPress={() => setShowSidebar(true)}
+          className="flex-row items-center"
+        >
           <Image
             source={{
               uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
@@ -587,21 +600,25 @@ const CommunityScreen = () => {
               Explore your community
             </Text>
           </View>
-        </View>
+        </Pressable>
         <View className="flex-row items-center">
-          <Pressable className="p-2 mr-2">
+          <Pressable
+            onPress={() => navigation.navigate("Notification")}
+            className="p-2 mr-2"
+          >
             <Image source={require("../../../assets/images/noti.webp")} />
           </Pressable>
-          <Pressable className="p-2">
+          <Pressable
+            ref={ellipsisRef}
+            onPress={handleEllipsisPress}
+            className="p-2"
+          >
             <EllipsisVertical />
           </Pressable>
         </View>
       </View>
 
-      <ScrollView
-        className="flex-1 "
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
@@ -787,6 +804,13 @@ const CommunityScreen = () => {
           />
         )}
       </Modal>
+
+      <DropdownMenu
+        visible={showDropdown}
+        onClose={() => setShowDropdown(false)}
+        position={dropdownPosition}
+      />
+      <Sidebar visible={showSidebar} onClose={() => setShowSidebar(false)} />
     </SafeAreaView>
   );
 };

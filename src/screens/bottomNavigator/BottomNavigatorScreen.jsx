@@ -395,14 +395,7 @@
 
 // export default BottomNavigatorScreen;
 
-import {
-  View,
-  Text,
-  Image,
-  Pressable,
-  Modal,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Image, Pressable, Modal, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import WardrobeScreen from "./WardrobeScreen";
 import CommunityScreen from "./CommunityScreen";
@@ -415,6 +408,7 @@ import {
 } from "react-native-responsive-dimensions";
 import AccountStack from "./accountStack/AcountStack";
 import { useNavigation } from "@react-navigation/native";
+import { centralModalOption } from "../../../assets/data/data";
 
 const Tab = createBottomTabNavigator();
 
@@ -423,7 +417,6 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
-
 
   return (
     <View style={styles.tabBarContainer}>
@@ -436,23 +429,23 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.sideModalContent}>
-              {["Add Item", "Create an outfit", "Create lookbook"].map(
-                (label, i) => (
-                  <Pressable
-                    key={i}
-                    style={{
-                      padding: responsiveHeight(1.5)
-                    }}
-                    onPress={() => {
-                      closeModal();
-                      // console.log(`${label} pressed`);
-                      navigation.navigate('AddItem')
-                    }}
-                  >
-                    <Text className="text-center font-SemiBold text-base text-textPrimary">{label}</Text>
-                  </Pressable>
-                )
-              )}
+              {centralModalOption.map((item, i) => (
+                <Pressable
+                  key={i}
+                  style={{
+                    padding: responsiveHeight(1.5),
+                  }}
+                  onPress={() => {
+                    closeModal();
+                    // console.log(`${label} pressed`);
+                    navigation.navigate(item?.path);
+                  }}
+                >
+                  <Text className="text-center font-SemiBold text-base text-textPrimary">
+                    {item?.title}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
             {/* Triangle tip pointing down */}
             <View style={styles.triangleTip} />
@@ -498,11 +491,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
               : icons[route.name]?.inactive;
 
             return (
-              <Pressable
-                key={index}
-                onPress={onPress}
-                style={styles.tabItem}
-              >
+              <Pressable key={index} onPress={onPress} style={styles.tabItem}>
                 <Image source={icon} style={styles.tabIcon} />
                 <Text
                   style={[
@@ -518,10 +507,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         </View>
 
         {/* Plus Button Centered */}
-        <Pressable
-          onPress={openModal}
-          style={styles.plusButtonContainer}
-        >
+        <Pressable onPress={openModal} style={styles.plusButtonContainer}>
           <View style={styles.plusButton}>
             <Text style={styles.plusIcon}>+</Text>
           </View>
@@ -562,11 +548,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
               : icons[route.name]?.inactive;
 
             return (
-              <Pressable
-                key={index}
-                onPress={onPress}
-                style={styles.tabItem}
-              >
+              <Pressable key={index} onPress={onPress} style={styles.tabItem}>
                 <Image source={icon} style={styles.tabIcon} />
                 <Text
                   style={[
