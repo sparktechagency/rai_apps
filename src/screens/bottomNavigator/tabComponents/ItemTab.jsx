@@ -155,15 +155,15 @@ const ItemTab = ({ tab }) => {
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
-            gap: 5,
+            gap: 2,
             backgroundColor: "white",
           }}
         >
           <Image source={require("../../../../assets/images/itemTab.webp")} />
-          <Text className="font-Medium text-[16px] text-textPrimary">
+          <Text className="font-Medium text-[16px] text-textPrimary text-center">
             Hit the plus button to start adding to your wardrobe
           </Text>
-          <Text className="font-Regular text-[14px] text-textPrimary">
+          <Text className="font-Regular text-[14px] text-textPrimary text-center">
             No items in your wardrobe yet so let’s go
           </Text>
         </View>

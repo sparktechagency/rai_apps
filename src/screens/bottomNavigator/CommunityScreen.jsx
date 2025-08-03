@@ -467,7 +467,14 @@ const CommunityScreen = () => {
   const PostCard = ({ post }) => (
     <View className="bg-white mb-4 rounded-3xl overflow-hidden">
       <View className="flex-row items-center justify-between px-4 ">
-        <View className="flex-row items-center">
+        <Pressable
+          onPress={() =>
+            navigation.navigate("CommunityStack", {
+              screen: "CommunityProfile",
+            })
+          }
+          className="flex-row items-center"
+        >
           <Image
             source={{ uri: post.user.avatar }}
             className="w-10 h-10 rounded-full mr-3"
@@ -475,10 +482,10 @@ const CommunityScreen = () => {
           <Text className="text-[16px] font-Medium text-textPrimary">
             {post.user.name}
           </Text>
-        </View>
+        </Pressable>
         <Pressable
           className={`px-4 py-2 rounded-full ${
-            post.user.isFollowing ? "bg-surfaceSecondary" : "bg-purple-600"
+            post.user.isFollowing ? "bg-surfaceSecondary" : "bg-surfaceAction"
           }`}
           onPress={() => toggleFollow(post.id)}
         >

@@ -20,6 +20,9 @@ import CreateLookbookEditScreen from "../editCard/CreateLookbookEditScreen";
 import CreateOutfitEditScreen from "../editCard/CreateOutfitEditScreen";
 import CreateLookbookEditStack from "../editCard/CreateLookbookEditStack";
 import NotificationScreen from "../screens/NotificationScreen";
+import CommunityStack from "../screens/communityStack/CommunityStack";
+import WishlistStack from "../screens/wishlistStack/WishlistStack";
+import DressMeStack from "../screens/dressMeStack/DressMeStack";
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
@@ -57,6 +60,14 @@ const AppNavigator = () => {
       {/* notifiation */}
       <Stack.Screen name="Notification" component={NotificationScreen} />
 
+      {/*community*/}
+      <Stack.Screen name="CommunityStack" component={CommunityStack} />
+
+      {/*Wishlist*/}
+      <Stack.Screen name="WishlistStack" component={WishlistStack} />
+
+      {/*Wishlist*/}
+      <Stack.Screen name="DressMeStack" component={DressMeStack} />
     </Stack.Navigator>
   );
 };

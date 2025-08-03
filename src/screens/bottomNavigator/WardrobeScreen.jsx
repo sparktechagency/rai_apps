@@ -1143,8 +1143,12 @@ const stylesList = [
   "Business",
   "Home",
 ];
-const TAB_IDS = { Items: "Items", Outfit: "Outfit", Lookbooks: "Lookbooks" };
-const TAB_OPTIONS = [
+export const TAB_IDS = {
+  Items: "Items",
+  Outfit: "Outfit",
+  Lookbooks: "Lookbooks",
+};
+export const TAB_OPTIONS = [
   { id: TAB_IDS.Items, label: "Items" },
   { id: TAB_IDS.Outfit, label: "Outfit" },
   { id: TAB_IDS.Lookbooks, label: "Lookbooks" },
@@ -1172,7 +1176,6 @@ export const Sidebar = ({ visible, onClose }) => {
   if (!visible) return null;
 
   return (
-
     <Modal
       transparent
       visible={visible}
@@ -1196,16 +1199,22 @@ export const Sidebar = ({ visible, onClose }) => {
               }}
               className="w-16 h-16 rounded-full mb-3 border border-[#5700FE]"
             />
-            <View  className="gap-1">
+            <View className="gap-1">
               <View className="border-b border-zinc-200 gap-1">
                 <Text className="text-lg font-SemiBold text-textPrimary ">
                   Hey, Mahfuz !
                 </Text>
-                <Text className="text-sm font-Regular text-gray-500 mb-1">@email</Text>
+                <Text className="text-sm font-Regular text-gray-500 mb-1">
+                  @email
+                </Text>
               </View>
               <View className="flex-row gap-6 mt-1">
-                <Text className="text-sm font-Medium text-textPrimary">0 followers</Text>
-                <Text className="text-sm font-Medium text-textPrimary">1 Following</Text>
+                <Text className="text-sm font-Medium text-textPrimary">
+                  0 followers
+                </Text>
+                <Text className="text-sm font-Medium text-textPrimary">
+                  1 Following
+                </Text>
               </View>
             </View>
           </View>
@@ -1219,7 +1228,9 @@ export const Sidebar = ({ visible, onClose }) => {
                 onPress={() => onClose()}
               >
                 <item.icon size={20} color="#000" style={{ marginRight: 16 }} />
-                <Text className="text-base text-textPrimary font-Medium">{item.label}</Text>
+                <Text className="text-base text-textPrimary font-Medium">
+                  {item.label}
+                </Text>
               </Pressable>
             ))}
           </View>
@@ -1233,7 +1244,9 @@ export const Sidebar = ({ visible, onClose }) => {
                 onPress={() => onClose()}
               >
                 <item.icon size={20} color="#000" style={{ marginRight: 16 }} />
-                <Text className="text-base text-textPrimary font-Medium">{item.label}</Text>
+                <Text className="text-base text-textPrimary font-Medium">
+                  {item.label}
+                </Text>
               </Pressable>
             ))}
           </View>
@@ -1249,6 +1262,7 @@ export const DropdownMenu = ({ visible, onClose, position }) => {
       id: 1,
       icon: require("../../../assets/images/globe.png"),
       label: "My Community",
+      path: "CommunityStack",
     },
     {
       id: 2,
@@ -1259,11 +1273,14 @@ export const DropdownMenu = ({ visible, onClose, position }) => {
       id: 3,
       icon: require("../../../assets/images/heart.png"),
       label: "Wishlist",
+      path: "WishlistStack",
     },
     {
       id: 4,
       icon: require("../../../assets/images/dress.png"),
       label: "Dress Me",
+      path: "DressMeStack",
+
     },
     {
       id: 5,
@@ -1273,7 +1290,7 @@ export const DropdownMenu = ({ visible, onClose, position }) => {
   ];
 
   if (!visible) return null;
-
+  const navigation = useNavigation();
   return (
     <Modal
       transparent
@@ -1290,10 +1307,14 @@ export const DropdownMenu = ({ visible, onClose, position }) => {
             <Pressable
               key={item.id}
               className={`flex-row items-center gap-2 px-4 py-3 ${index === menuItems.length - 1 ? "border-b-0" : "border-b border-gray-100"}`}
-              onPress={() => onClose()}
+              onPress={() => {
+                onClose();
+
+                navigation.navigate(item.path);
+              }}
             >
               <Image source={item.icon} className="w-6 h-6" />
-              <Text className="text-[15px] text-gray-800 font-medium">
+              <Text className="text-[15px] text-gray-800 font-Medium">
                 {item.label}
               </Text>
             </Pressable>
@@ -1457,7 +1478,7 @@ const WardrobeScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-surfacePrimary px-4 py-3 flex-row items-center justify-between rounded-b-2xl">
+      <View className="bg-surfacePrimary px-5 py-3 flex-row items-center justify-between rounded-b-2xl">
         <Pressable
           onPress={() => setShowSidebar(true)}
           className="flex-row items-center"
@@ -1518,7 +1539,7 @@ const WardrobeScreen = () => {
       )}
 
       {/* Tabs */}
-      <View className="bg-white px-4 py-2 flex-row">
+      <View className="bg-white px-5 py-2 flex-row">
         {TAB_OPTIONS.map((tab) => (
           <Pressable
             key={tab.id}
