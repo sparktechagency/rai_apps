@@ -16,6 +16,7 @@ import {
 import { Check, X } from "lucide-react-native";
 import CustomBottomSheetCreateItem from "./CustomBottomSheetCreateItem";
 import { useNavigation } from "@react-navigation/native";
+
 const products = [
   {
     id: 1,

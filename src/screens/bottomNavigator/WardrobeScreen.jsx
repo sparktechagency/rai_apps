@@ -1117,6 +1117,7 @@ import {
   Modal,
   Animated,
   Dimensions,
+  useWindowDimensions,
 } from "react-native";
 import {
   responsiveHeight,
@@ -1131,6 +1132,7 @@ import CustomBottomSheet from "../../components/CustomBottomSheet";
 import ColorPalette from "../../components/ColorPallete";
 import { categories } from "../../../assets/data/data";
 import { Slider } from "@miblanchard/react-native-slider";
+import { SceneMap, TabView } from "react-native-tab-view";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SIDEBAR_WIDTH = SCREEN_WIDTH * 0.6;
@@ -1280,7 +1282,6 @@ export const DropdownMenu = ({ visible, onClose, position }) => {
       icon: require("../../../assets/images/dress.png"),
       label: "Dress Me",
       path: "DressMeStack",
-
     },
     {
       id: 5,
@@ -1462,6 +1463,30 @@ const WardrobeScreen = () => {
   const { tab } = route.params || {};
   const navigation = useNavigation();
 
+  const layout = useWindowDimensions();
+
+  const initialTab = tab ?? null;
+  const initialIndex = TAB_OPTIONS.findIndex((t) => t.id === initialTab);
+
+  const [index, setIndex] = useState(initialIndex);
+
+  const routes = TAB_OPTIONS.map((tab) => ({
+    key: tab.id,
+    title: tab.label,
+  }));
+
+  const renderScene = SceneMap({
+    [TAB_IDS.Items]: () => <ItemTab tab={tab === TAB_IDS.Items} />,
+    [TAB_IDS.Outfit]: () => <OutfitTab />,
+    [TAB_IDS.Lookbooks]: () => (
+      <LookbookTab tab={tab === TAB_IDS.Lookbooks} />
+    ),
+  });
+
+  useEffect(() => {
+    setIndex(TAB_OPTIONS.findIndex((t) => t.id === activeTab));
+  }, [activeTab]);
+
   useEffect(() => {
     if (tab) setActiveTab(tab);
   }, [tab]);
@@ -1539,7 +1564,7 @@ const WardrobeScreen = () => {
       )}
 
       {/* Tabs */}
-      <View className="bg-white px-5 py-2 flex-row">
+      {/* <View className="bg-white px-5 py-2 flex-row">
         {TAB_OPTIONS.map((tab) => (
           <Pressable
             key={tab.id}
@@ -1553,14 +1578,48 @@ const WardrobeScreen = () => {
             </Text>
           </Pressable>
         ))}
+      </View> */}
+      <View className="bg-white px-5 py-2 flex-row">
+        {TAB_OPTIONS.map((tab, i) => (
+          <Pressable
+            key={tab.id}
+            className="flex-1 py-3"
+            onPress={() => {
+              setActiveTab(tab.id);
+              setIndex(i);
+            }}
+          >
+            <Text
+              className={`text-center text-base font-Medium ${
+                activeTab === tab.id
+                  ? "text-textPrimary border-b-2 border-borderAction pb-2"
+                  : "text-textPrimary"
+              }`}
+            >
+              {tab.label}
+            </Text>
+          </Pressable>
+        ))}
       </View>
 
       {/* Tab Content */}
-      {activeTab === TAB_IDS.Items && <ItemTab tab={tab === TAB_IDS.Items} />}
+      {/* {activeTab === TAB_IDS.Items && <ItemTab tab={tab === TAB_IDS.Items} />}
       {activeTab === TAB_IDS.Outfit && <OutfitTab />}
       {activeTab === TAB_IDS.Lookbooks && (
         <LookbookTab tab={tab === TAB_IDS.Lookbooks} />
-      )}
+      )} */}
+
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={(i) => {
+          setIndex(i);
+          setActiveTab(TAB_OPTIONS[i].id);
+        }}
+        initialLayout={{ width: layout.width }}
+        swipeEnabled={true}
+        renderTabBar={() => null} // Hide default tab bar
+      />
 
       {/* Modals */}
       <BottomSheet visible={showModal} onCancel={() => setShowModal(false)} />

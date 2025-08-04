@@ -72,10 +72,10 @@
 
 // export default DressMeScreen;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ArrowLeft } from "lucide-react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { responsiveWidth } from "react-native-responsive-dimensions";
@@ -91,20 +91,54 @@ const TAB_IDS = {
 };
 
 const DressMeScreen = () => {
+  const route = useRoute();
+  console.log(route);
+  const tab = route.params?.tab;
+  const id = route.params?.id;
+  console.log("LINE AT 97", tab , id);
+
   const navigation = useNavigation();
   const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "Items2", title: "2 Items" },
     { key: "Items3", title: "3 Items" },
     { key: "Items4", title: "4 Items" },
   ]);
 
-  const renderScene = SceneMap({
-    Items2: Item2Tab,
-    Items3: Item3Tab,
-    Items4: Item4Tab,
-  });
+  // const renderScene = SceneMap({
+  //   Items2: Item2Tab,
+  //   Items3: Item3Tab,
+  //   Items4: Item4Tab,
+  // });
+
+const renderScene = ({ route }) => {
+  switch (route.key) {
+    case "Items2":
+      return <Item2Tab id={id} />;
+    case "Items3":
+      return <Item3Tab id={id} />;
+    case "Items4":
+      return <Item4Tab id={id} />;
+    default:
+      return null;
+  }
+};
+
+  const initialIndex = tab ? routes.findIndex((r) => r.title === tab) : 0;
+  const [index, setIndex] = useState(initialIndex);
+
+
+  // useEffect(() => {
+  //   // Map tab value ("2 Items", "3 Items", etc.) to route index
+  //   const tabIndex = routes.findIndex((r) => r.title === tab);
+  //   console.log(tabIndex);
+
+  //   if (tabIndex !== -1) {
+  //     setIndex(tabIndex);
+  //   } else {
+  //     setIndex(0); // Default to "2 Items" tab
+  //   }
+  // }, [tab]);
 
   const renderTabBar = () => (
     <View className="bg-white flex-row py-2">
