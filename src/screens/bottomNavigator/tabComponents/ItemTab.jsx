@@ -119,7 +119,7 @@ const ItemTab = ({ tab }) => {
       }}
     >
       {tab ? (
-        <ScrollView className="flex-1 bg-white "
+        <ScrollView className="flex-1 bg-white"
         showsVerticalScrollIndicator={false}
         >
           {/* Category Filter */}

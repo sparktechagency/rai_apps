@@ -1,5 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import { Upload, CheckCircle2, ArrowLeft, SquarePen } from "lucide-react-native";
+import {
+  Upload,
+  CheckCircle2,
+  ArrowLeft,
+  SquarePen,
+  Trash2,
+  Eye,
+  X,
+} from "lucide-react-native";
 import React, { useState } from "react";
 import {
   View,
@@ -25,6 +33,7 @@ import { categories, seasons, styles } from "../../assets/data/data";
 import OptionSelector from "../components/OptionSelector";
 import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
+import * as ImagePicker from "expo-image-picker";
 
 const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
   return (
@@ -92,6 +101,35 @@ const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
   );
 };
 
+const ViewImageModal = ({
+  isImageViewVisible,
+  setIsImageViewVisible,
+  image,
+}) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isImageViewVisible}
+      onRequestClose={() => setIsImageViewVisible(false)}
+    >
+      <View className="flex-1 bg-black/90 justify-center items-center">
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          className="w-[90%] h-[70%] rounded-2xl"
+        />
+        <Pressable
+          onPress={() => setIsImageViewVisible(false)}
+          className="mt-6 p-4 rounded-2xl bg-red-300/50"
+        >
+          <X color="red" />
+        </Pressable>
+      </View>
+    </Modal>
+  );
+};
+
 const CreateLookbookEditScreen = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -122,7 +160,19 @@ const CreateLookbookEditScreen = () => {
     navigation?.goBack?.();
   };
   const [selectedFruits, setSelectedFruits] = useState([]);
+  const [image, setImage] = useState(null);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+    });
 
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setImage(uri);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 ">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -131,13 +181,18 @@ const CreateLookbookEditScreen = () => {
           style={{
             flex: 1,
             paddingHorizontal: responsiveWidth(5),
-            paddingTop: StatusBar.currentHeight || 0,
-            paddingBottom: responsiveHeight(2),
+            // paddingTop: StatusBar.currentHeight || 0,
+            // paddingBottom: responsiveHeight(2),
             backgroundColor: "white",
           }}
         >
           {/* Header */}
-          <View className="flex-row items-center  py-5 ">
+          <View
+            className="flex-row items-center"
+            style={{
+              paddingVertical: responsiveHeight(3),
+            }}
+          >
             <Pressable
               onPress={handleGoBack}
               activeOpacity={0.7}
@@ -165,14 +220,41 @@ const CreateLookbookEditScreen = () => {
                   paddingVertical: responsiveHeight(5),
                 }}
               >
-                 <Pressable className="items-center bg-surfaceAction rounded-md p-3 justify-center gap-2 absolute right-5 bottom-5 z-20">
-                     <SquarePen color="#fff"/>
-
-                  
+                <Pressable  onPress={pickImage} className="items-center bg-surfaceAction rounded-md p-3 justify-center gap-2 absolute right-5 bottom-5 z-20">
+                  <SquarePen color="#fff" />
                 </Pressable>
 
-                
-                <Image source={require("../../assets/images/shirt.png")} />
+                  {image ? (
+                  <View
+                    className="items-center justify-center"
+                    style={{
+                      gap: responsiveHeight(3),
+                    }}
+                  >
+                    <Image source={require("../../assets/images/tick3.png")} />
+                    <Text className="text-lg font-Medium">
+                      Photo is successfully uploaded
+                    </Text>
+
+                    <View className="flex-row gap-2">
+                      <Pressable
+                        onPress={() => setImage(null)}
+                        className="p-4 rounded-2xl bg-red-300/50"
+                      >
+                        <Trash2 color="red" />
+                      </Pressable>
+                      {/* view image */}
+                      <Pressable
+                        onPress={() => setIsImageViewVisible(true)}
+                        className="p-4 rounded-2xl bg-green-300/50"
+                      >
+                        <Eye color="green" />
+                      </Pressable>
+                    </View>
+                  </View>
+                ) : (
+                  <Image source={require("../../assets/images/shirt.png")} />
+                )}
               </View>
             </View>
 
@@ -260,7 +342,7 @@ const CreateLookbookEditScreen = () => {
           </ScrollView>
 
           {/* Next Button */}
-          <View className="flex-row gap-2 items-center justify-between">
+          <View className="flex-row gap-2 items-center justify-between py-2">
             <Pressable
               className="flex-1 bg-surfaceSecondary py-4 rounded-xl flex-row items-center justify-center"
               onPress={handleNext}
@@ -271,7 +353,7 @@ const CreateLookbookEditScreen = () => {
             </Pressable>
             <Pressable
               className="flex-1 bg-red-500 py-4 rounded-xl flex-row items-center justify-center"
-              onPress={()=> setShowDeleteModal(true)}
+              onPress={() => setShowDeleteModal(true)}
             >
               <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
                 Delete
@@ -282,6 +364,11 @@ const CreateLookbookEditScreen = () => {
             visible={showDeleteModal}
             onCancel={handleDeleteCancel}
             onConfirm={handleDeleteConfirm}
+          />
+          <ViewImageModal
+            isImageViewVisible={isImageViewVisible}
+            setIsImageViewVisible={setIsImageViewVisible}
+            image={image}
           />
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

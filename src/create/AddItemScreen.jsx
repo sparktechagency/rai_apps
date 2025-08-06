@@ -179,7 +179,14 @@
 // export default SetProfileScreen;
 
 import { useNavigation } from "@react-navigation/native";
-import { Upload, CheckCircle2, ArrowLeft } from "lucide-react-native";
+import {
+  Upload,
+  CheckCircle2,
+  ArrowLeft,
+  Eye,
+  Trash2,
+  X,
+} from "lucide-react-native";
 import React, { useState } from "react";
 import {
   View,
@@ -205,6 +212,38 @@ import { categories, seasons, styles } from "../../assets/data/data";
 import OptionSelector from "../components/OptionSelector";
 import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
+import * as ImagePicker from "expo-image-picker";
+import CameraUI from "../components/CameraUI";
+
+const ViewImageModal = ({
+  isImageViewVisible,
+  setIsImageViewVisible,
+  image,
+}) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isImageViewVisible}
+      onRequestClose={() => setIsImageViewVisible(false)}
+    >
+      <View className="flex-1 bg-black/90 justify-center items-center">
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          className="w-[90%] h-[70%] rounded-2xl"
+        />
+        <Pressable
+          onPress={() => setIsImageViewVisible(false)}
+          className="mt-6 p-4 rounded-2xl bg-red-300/50"
+        >
+          <X color="red" />
+        </Pressable>
+      </View>
+    </Modal>
+  );
+};
+
 const AddItemScreen = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -213,6 +252,10 @@ const AddItemScreen = () => {
   const [selectedGender, setSelectedGender] = useState("Male");
   const [successVisible, setSuccessVisible] = useState(false);
   const navigation = useNavigation();
+  const [image, setImage] = useState(null);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [showFolderModal, setShowFolderModal] = useState(false);
 
   const handleGenderSelect = (gender) => setSelectedGender(gender);
   const handleNext = () => {
@@ -222,16 +265,26 @@ const AddItemScreen = () => {
     //   // You can also navigate to another screen here, e.g.:
     //   // navigation.navigate('Home');
     // }, 2000); // Auto-close after 2 seconds
-   navigation.navigate('BottomNavigator', {
-  screen: 'Wardrobe',
-  params: { tab: 'Items' },
-});
+    navigation.navigate("BottomNavigator", {
+      screen: "Wardrobe",
+      params: { tab: "Items" },
+    });
   };
   const handleGoBack = () => {
     navigation?.goBack?.();
   };
   const [selectedFruits, setSelectedFruits] = useState([]);
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+    });
 
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setImage(uri);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 ">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -240,13 +293,18 @@ const AddItemScreen = () => {
           style={{
             flex: 1,
             paddingHorizontal: responsiveWidth(5),
-            paddingTop: StatusBar.currentHeight || 0,
+            // paddingTop: StatusBar.currentHeight || 0,
             paddingBottom: responsiveHeight(2),
             backgroundColor: "white",
           }}
         >
           {/* Header */}
-          <View className="flex-row items-center  py-5 ">
+          <View
+            className="flex-row items-center"
+            style={{
+              paddingVertical: responsiveHeight(3),
+            }}
+          >
             <Pressable
               onPress={handleGoBack}
               activeOpacity={0.7}
@@ -271,7 +329,7 @@ const AddItemScreen = () => {
                 Add Profile Photo
               </Text>
 
-              <View
+              {/* <View
                 className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
                 style={{
                   gap: responsiveHeight(3),
@@ -294,7 +352,66 @@ const AddItemScreen = () => {
                     Upload from Gallery
                   </Text>
                 </Pressable>
-              </View>
+              </View> */}
+              {image ? (
+                <View
+                  className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
+                  style={{
+                    gap: responsiveHeight(3),
+                    paddingVertical: responsiveHeight(5),
+                  }}
+                >
+                  <Image source={require("../../assets/images/tick3.png")} />
+                  <Text className="text-lg font-Medium">
+                    Photo is successfully uploaded
+                  </Text>
+
+                  <View className="flex-row gap-2">
+                    <Pressable
+                      onPress={() => setImage(null)}
+                      className="p-4 rounded-2xl bg-red-300/50"
+                    >
+                      <Trash2 color="red" />
+                    </Pressable>
+                    {/* view image */}
+                    <Pressable
+                      onPress={() => setIsImageViewVisible(true)}
+                      className="p-4 rounded-2xl bg-green-300/50"
+                    >
+                      <Eye color="green" />
+                    </Pressable>
+                  </View>
+                </View>
+              ) : (
+                <View
+                  className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
+                  style={{
+                    gap: responsiveHeight(3),
+                    paddingVertical: responsiveHeight(5),
+                  }}
+                >
+                  <Pressable
+                    onPress={() => setIsCameraActive(true)}
+                    className="items-center justify-center gap-2"
+                  >
+                    <Image source={require("../../assets/images/camera.png")} />
+                    <Text className="text-textSecondary text-center font-Medium text-[16px]">
+                      Tap the camera to take a photo
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={pickImage}
+                    className="bg-surfaceActionTertiary py-4 rounded-full flex-row items-center justify-center gap-3"
+                    style={{ paddingHorizontal: responsiveWidth(5) }}
+                  >
+                    <Upload size={20} color="#f4f4f4" />
+                    <Text className="text-[16px] text-textPrimaryInverted font-SemiBold">
+                      Upload from Gallery
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
 
             {/* Form */}
@@ -391,26 +508,19 @@ const AddItemScreen = () => {
           </Pressable>
 
           {/* Success Modal */}
-          {/* <Modal
-            animationType="fade"
-            transparent={true}
-            visible={successVisible}
-            // onRequestClose={() => setSuccessVisible(false)}
-          >
-            <View className="flex-1 justify-center items-center bg-black/40">
-              <View className="bg-white rounded-2xl w-[80%] p-6 items-center">
-                <Image
-                  source={require("../../../assets/images/profile-success.webp")}
-                />
-                <Text className="text-3xl font-SemiBold text-textPrimary mt-4 text-center">
-                  Successfully created your profile
-                </Text>
-                <Text className="text-[16px] text-center font-Medium text-textPrimary mt-4 mb-4 px-3">
-                  Fill rest of the data into privacy & setting option
-                </Text>
-              </View>
-            </View>
-          </Modal> */}
+          <ViewImageModal
+            isImageViewVisible={isImageViewVisible}
+            setIsImageViewVisible={setIsImageViewVisible}
+            image={image}
+          />
+
+          {/* Camera UI */}
+          <CameraUI
+            isCameraActive={isCameraActive}
+            setIsCameraActive={setIsCameraActive}
+            setPhotoPath={setImage}
+            setShowFolderModal={setShowFolderModal}
+          />
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </SafeAreaView>

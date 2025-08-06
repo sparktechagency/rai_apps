@@ -149,7 +149,7 @@ const Item2Tab = ({ id }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleSave = (data) => {
     console.log("Saved data:", data);
-    navigation.navigate('OutfitCreated')
+    navigation.navigate("OutfitCreated");
   };
   return (
     <View className="flex-1 justify-between">

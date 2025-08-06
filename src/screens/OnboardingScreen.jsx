@@ -168,7 +168,6 @@ export default function OnboardingScreen() {
   const handleSignUp = () => {
     // console.log("Sign up pressed");
     navigation.navigate("Signup");
-
   };
 
   const handleGetStarted = () => {
@@ -275,9 +274,18 @@ export default function OnboardingScreen() {
           </View>
 
           {/* Footer */}
-          <View className="flex-1  justify-center items-center">
-            <Text className="font-Regular  mb-1">@2025 Rai</Text>
+          <View
+            className="flex-1  justify-center items-center "
+            style={{
+              position: "absolute",
+              bottom: 3,
+              left: responsiveWidth(5),
+              right: responsiveWidth(5),
+            }}
+          >
+            <Text className="font-Regular  mb-1 text-center">@2025 Rai</Text>
           </View>
+          
         </View>
       </View>
     );
@@ -422,7 +430,11 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 10,
   },
   buttonContainer: {
-    marginVertical: responsiveHeight(3),
+    // marginVertical: responsiveHeight(3),
+    position: "absolute",
+    top: responsiveHeight(30), // Adjust spacing from bottom
+    left: responsiveWidth(5),
+    right: responsiveWidth(5),
   },
   loginButtonsContainer: {
     gap: 12,

@@ -59,7 +59,9 @@ const OutfitTab = ({ tab }) => {
             backgroundColor: "white",
           }}
         >
-          <Image source={require("../../../../assets/images/outfitTab.webp")} />
+          <Image source={require("../../../../assets/images/outfitTab.webp")} 
+          className="px-5 object-cover"
+          />
           <Text className="font-Medium text-[16px] text-textPrimary">
             Fresh looks are waiting for you
           </Text>

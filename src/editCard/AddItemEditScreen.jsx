@@ -1,5 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import { Upload, CheckCircle2, ArrowLeft, SquarePen } from "lucide-react-native";
+import {
+  Upload,
+  CheckCircle2,
+  ArrowLeft,
+  SquarePen,
+  Trash2,
+  Eye,
+  X,
+} from "lucide-react-native";
 import React, { useState } from "react";
 import {
   View,
@@ -25,6 +33,7 @@ import { categories, seasons, styles } from "../../assets/data/data";
 import OptionSelector from "../components/OptionSelector";
 import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
+import * as ImagePicker from "expo-image-picker";
 
 const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
   return (
@@ -44,18 +53,7 @@ const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
           activeOpacity={1}
           onPress={() => {}} // Prevent closing when touching modal content
         >
-          {/* User Avatar */}
-          {/* <View className="items-center mb-6">
-            <View className="w-20 h-20 rounded-full overflow-hidden border-4 border-gray-100">
-              <Image
-                source={{
-                  uri: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-                }}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
-            </View>
-          </View> */}
+
 
           {/* Modal Title */}
 
@@ -92,6 +90,35 @@ const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
   );
 };
 
+const ViewImageModal = ({
+  isImageViewVisible,
+  setIsImageViewVisible,
+  image,
+}) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isImageViewVisible}
+      onRequestClose={() => setIsImageViewVisible(false)}
+    >
+      <View className="flex-1 bg-black/90 justify-center items-center">
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          className="w-[90%] h-[70%] rounded-2xl"
+        />
+        <Pressable
+          onPress={() => setIsImageViewVisible(false)}
+          className="mt-6 p-4 rounded-2xl bg-red-300/50"
+        >
+          <X color="red" />
+        </Pressable>
+      </View>
+    </Modal>
+  );
+};
+
 const AddItemEditScreen = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -99,9 +126,13 @@ const AddItemEditScreen = () => {
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [image, setImage] = useState(null);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+
   const handleDeleteConfirm = () => {
     setShowDeleteModal(false);
   };
+
   const handleDeleteCancel = () => {
     setShowDeleteModal(false);
   };
@@ -123,6 +154,18 @@ const AddItemEditScreen = () => {
   };
   const [selectedFruits, setSelectedFruits] = useState([]);
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setImage(uri);
+    }
+  };
+  
   return (
     <SafeAreaView className="flex-1 ">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -131,13 +174,18 @@ const AddItemEditScreen = () => {
           style={{
             flex: 1,
             paddingHorizontal: responsiveWidth(5),
-            paddingTop: StatusBar.currentHeight || 0,
-            paddingBottom: responsiveHeight(2),
+            // paddingTop: StatusBar.currentHeight || 0,
+            // paddingBottom: responsiveHeight(2),
             backgroundColor: "white",
           }}
         >
           {/* Header */}
-          <View className="flex-row items-center  py-5 ">
+          <View
+            className="flex-row items-center"
+            style={{
+              paddingVertical: responsiveHeight(3),
+            }}
+          >
             <Pressable
               onPress={handleGoBack}
               activeOpacity={0.7}
@@ -181,14 +229,44 @@ const AddItemEditScreen = () => {
                     Upload from Gallery
                   </Text>
                 </Pressable> */}
-                <Image source={require("../../assets/images/shirt.png")} />
-              
-              </View>
-              <Pressable className="items-center bg-surfaceAction rounded-md p-3 justify-center gap-2 absolute right-5 bottom-5 z-20">
-                     <SquarePen color="#fff"/>
+                {image ? (
+                  <View
+                    className="items-center justify-center"
+                    style={{
+                      gap: responsiveHeight(3),
+                    }}
+                  >
+                    <Image source={require("../../assets/images/tick3.png")} />
+                    <Text className="text-lg font-Medium">
+                      Photo is successfully uploaded
+                    </Text>
 
-                  
-                </Pressable>
+                    <View className="flex-row gap-2">
+                      <Pressable
+                        onPress={() => setImage(null)}
+                        className="p-4 rounded-2xl bg-red-300/50"
+                      >
+                        <Trash2 color="red" />
+                      </Pressable>
+                      {/* view image */}
+                      <Pressable
+                        onPress={() => setIsImageViewVisible(true)}
+                        className="p-4 rounded-2xl bg-green-300/50"
+                      >
+                        <Eye color="green" />
+                      </Pressable>
+                    </View>
+                  </View>
+                ) : (
+                  <Image source={require("../../assets/images/shirt.png")} />
+                )}
+              </View>
+              <Pressable
+                onPress={pickImage}
+                className="items-center bg-surfaceAction rounded-md p-3 justify-center gap-2 absolute right-5 bottom-5 z-20"
+              >
+                <SquarePen color="#fff" />
+              </Pressable>
             </View>
 
             {/* Form */}
@@ -275,7 +353,7 @@ const AddItemEditScreen = () => {
           </ScrollView>
 
           {/* Next Button */}
-          <View className="flex-row gap-2 items-center justify-between">
+          <View className="flex-row gap-2 items-center justify-between py-2">
             <Pressable
               className="flex-1 bg-surfaceSecondary py-4 rounded-xl flex-row items-center justify-center"
               onPress={handleNext}
@@ -286,17 +364,24 @@ const AddItemEditScreen = () => {
             </Pressable>
             <Pressable
               className="flex-1 bg-red-500 py-4 rounded-xl flex-row items-center justify-center"
-              onPress={()=> setShowDeleteModal(true)}
+              onPress={() => setShowDeleteModal(true)}
             >
               <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
                 Delete
               </Text>
             </Pressable>
           </View>
+
           <DeleteAccountModal
             visible={showDeleteModal}
             onCancel={handleDeleteCancel}
             onConfirm={handleDeleteConfirm}
+          />
+
+          <ViewImageModal
+            isImageViewVisible={isImageViewVisible}
+            setIsImageViewVisible={setIsImageViewVisible}
+            image={image}
           />
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

@@ -73,7 +73,7 @@ const BottomSheet = ({ visible, onCancel, onSave }) => {
             <Text
               className="text-center text-xl font-SemiBold text-textPrimary"
               style={{
-                paddingLeft: responsiveWidth(28),
+                paddingLeft: responsiveWidth(23),
               }}
             >
               Style Name

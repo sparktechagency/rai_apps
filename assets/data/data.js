@@ -197,7 +197,7 @@ export const categories = [
 
 export const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 
-export const styles = [
+export const stylesList = [
   "Casual",
   "Formal",
   "Streetwear",

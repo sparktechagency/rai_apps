@@ -572,6 +572,7 @@ const CommunityScreen = () => {
       <Text className="text-xl ml-2">{item.emoji}</Text>
     </Pressable>
   );
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
@@ -586,7 +587,7 @@ const CommunityScreen = () => {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 ">
       <View className="bg-white p-4 flex-row items-center justify-between">
         <Pressable
           onPress={() => setShowSidebar(true)}
@@ -624,12 +625,13 @@ const CommunityScreen = () => {
           </Pressable>
         </View>
       </View>
-
-      <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </ScrollView>
+      <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </ScrollView>
+      </View>
 
       <Modal
         animationType="slide"

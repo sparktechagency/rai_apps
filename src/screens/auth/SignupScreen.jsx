@@ -140,8 +140,15 @@ const SignupScreen = () => {
             {/* Forgot Password */}
 
             {/* Login Button */}
+          </ScrollView>
+          <ScrollView
+            contentContainerStyle={{
+              paddingVertical: responsiveHeight(3),
+            }}
+            showsVerticalScrollIndicator={false}
+          >
             <Pressable
-            onPress={() => navigation.navigate("SetProfile")}
+              onPress={() => navigation.navigate("SetProfile")}
               className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
               style={{ marginBottom: responsiveHeight(3) }}
             >
@@ -177,11 +184,11 @@ const SignupScreen = () => {
                 <Image
                   source={require("../../../assets/images/google.webp")}
                   style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
+                    width: responsiveWidth(7),
+                    height: responsiveWidth(7),
                   }}
                 />
-                <Text className="text-2xl text-textAction font-SemiBold">
+                <Text className="text-xl text-textAction font-SemiBold">
                   Google
                 </Text>
               </Pressable>
@@ -189,11 +196,11 @@ const SignupScreen = () => {
                 <Image
                   source={require("../../../assets/images/apple.webp")}
                   style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
+                    width: responsiveWidth(7),
+                    height: responsiveWidth(7),
                   }}
                 />
-                <Text className="text-2xl text-textAction font-SemiBold">
+                <Text className="text-xl text-textAction font-SemiBold">
                   Apple
                 </Text>
               </Pressable>

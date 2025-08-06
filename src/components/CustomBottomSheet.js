@@ -253,6 +253,7 @@ import { responsiveWidth } from "react-native-responsive-dimensions";
 const { height } = Dimensions.get("window");
 
 // Bottom Sheet Modal (Reusable)
+
 const SelectionBottomSheet = ({
   visible,
   onCancel,
@@ -261,7 +262,6 @@ const SelectionBottomSheet = ({
   data = [],
   title = "Select",
 }) => {
-  // For single selection, we'll store just one selected item (string or null)
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [localSelected, setLocalSelected] = useState(selectedItem);
@@ -289,7 +289,6 @@ const SelectionBottomSheet = ({
     }
   };
 
-  // Single select toggle: selecting an item sets it, selecting the same item deselects it
   const toggleSelection = (item) => {
     setLocalSelected((prev) => (prev === item ? null : item));
   };
@@ -312,44 +311,44 @@ const SelectionBottomSheet = ({
       animationType="slide"
       onRequestClose={onCancel}
     >
-      <View className="flex-1 bg-black/50 justify-end">
-        <View
-          className="bg-white rounded-t-3xl gap-2"
-          style={{ maxHeight: height * 0.85 }}
-        >
-          <View className="flex-row items-center justify-between p-4 pt-6 border-b border-gray-100 ">
-            <TouchableOpacity onPress={onCancel} className="p-2">
-              <X size={24} color="#000" />
-            </TouchableOpacity>
-            <Text className="text-xl font-SemiBold text-textPrimary">
-              {title}
+      <View className="flex-1 bg-white">
+        {/* Header */}
+        <View className="flex-row items-center justify-between p-4 pt-6 border-b border-gray-100">
+          <TouchableOpacity onPress={onCancel} className="p-2">
+            <X size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="text-xl font-SemiBold text-textPrimary">
+            {title}
+          </Text>
+          <TouchableOpacity onPress={handleReset}>
+            <Text className="text-base font-Medium text-textPrimary">
+              Reset
             </Text>
-            <TouchableOpacity onPress={handleReset}>
-              <Text className="text-base font-Medium text-textPrimary">
-                Reset
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+        </View>
 
-          <View className="px-5 ">
-            <View className="flex-row items-center border border-borderAction rounded-xl px-4 py-1 bg-white">
-              <Search size={20} color="#8b5cf6" />
-              <TextInput
-                ref={searchRef}
-                className="flex-1 ml-3 text-base font-Medium text-black"
-                value={searchQuery}
-                onChangeText={handleSearch}
-                placeholder="Search..."
-                placeholderTextColor="#9ca3af"
-              />
-              {searchQuery.length > 0 && (
-                <TouchableOpacity onPress={clearSearch} className="p-1">
-                  <X size={16} color="#6b7280" />
-                </TouchableOpacity>
-              )}
-            </View>
+        {/* Search Bar */}
+        <View className="px-5">
+          <View className="flex-row items-center border border-borderAction rounded-xl px-4 py-1 bg-white">
+            <Search size={20} color="#8b5cf6" />
+            <TextInput
+              ref={searchRef}
+              className="flex-1 ml-3 text-base font-Medium text-black"
+              value={searchQuery}
+              onChangeText={handleSearch}
+              placeholder="Search..."
+              placeholderTextColor="#9ca3af"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity onPress={clearSearch} className="p-1">
+                <X size={16} color="#6b7280" />
+              </TouchableOpacity>
+            )}
           </View>
+        </View>
 
+        {/* List */}
+        <View className="flex-1 mt-2">
           <ScrollView
             contentContainerStyle={{ paddingHorizontal: responsiveWidth(5) }}
           >
@@ -362,15 +361,6 @@ const SelectionBottomSheet = ({
                 <Text className="text-base font-Medium text-textPrimary flex-1">
                   {item}
                 </Text>
-                {/* <View
-                  className={`w-6 h-6 rounded-full border-2 items-center justify-center ${
-                    localSelected === item
-                      ? "bg-purple-500 border-purple-500"
-                      : "border-gray-300 bg-white"
-                  }`}
-                >
-                  {localSelected === item && <View className="w-2 h-2 bg-white rounded-full" />}
-                </View> */}
               </TouchableOpacity>
             ))}
 
@@ -382,16 +372,17 @@ const SelectionBottomSheet = ({
               </View>
             )}
           </ScrollView>
+        </View>
 
-          <View className="p-4 ">
-            <TouchableOpacity
-              className="bg-surfaceAction rounded-2xl py-4 items-center"
-              onPress={() => onApply(localSelected ? [localSelected] : [])}
-              activeOpacity={0.8}
-            >
-              <Text className="text-white text-lg font-SemiBold">Apply</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Apply Button */}
+        <View className="p-4">
+          <TouchableOpacity
+            className="bg-surfaceAction rounded-2xl py-4 items-center"
+            onPress={() => onApply(localSelected ? [localSelected] : [])}
+            activeOpacity={0.8}
+          >
+            <Text className="text-white text-lg font-SemiBold">Apply</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -406,7 +397,7 @@ const CustomBottomSheet = ({
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(initialSelected);
-console.log(selectedItem);
+  console.log(selectedItem);
 
   const handleApply = (items) => {
     setSelectedItem(items[0]);
@@ -430,8 +421,7 @@ console.log(selectedItem);
         activeOpacity={0.8}
       >
         <Text className="text-white text-lg font-Medium text-center">
-          {
-            `---Select ${title}---`}
+          {`---Select ${title}---`}
         </Text>
         <ChevronsUp size={20} color="white" />
       </TouchableOpacity>

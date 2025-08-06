@@ -899,7 +899,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { responsiveWidth } from "react-native-responsive-dimensions";
+import { responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomTimePicker from "./tabComponents/CustomTimePicker";
 import { useNavigation } from "@react-navigation/native";
@@ -1021,8 +1021,8 @@ const PlannerScreen = () => {
         />
       </View>
       <View className="flex-1">
-        <Text className="text-base font-medium text-gray-900">{item.name}</Text>
-        <Text className="text-xs text-gray-500 mt-1">{item.time}</Text>
+        <Text className="text-base font-Medium text-gray-900">{item.name}</Text>
+        <Text className="text-xs text-gray-500 mt-1 font-Regular">{item.time}</Text>
       </View>
       <Pressable
         className="p-2"
@@ -1100,7 +1100,12 @@ const PlannerScreen = () => {
       />
 
       {/* Floating Action Button */}
-      <Pressable className="absolute bottom-24 right-5 w-14 h-14 rounded-full bg-violet-700 justify-center items-center shadow-md">
+      <Pressable className="absolute  w-14 h-14 rounded-full bg-violet-700 justify-center items-center shadow-md"
+      style={{
+        bottom: responsiveHeight(5),
+        right: responsiveWidth(5),
+      }}
+      >
         <Text className="text-white text-2xl font-light">+</Text>
       </Pressable>
 
@@ -1146,7 +1151,7 @@ const PlannerScreen = () => {
                   onPress={handleReminder}
                 >
                   <BellRing size={18} color="#6B7280" />
-                  <Text className="text-sm font-medium text-gray-900 ml-3">
+                  <Text className="text-sm font-Medium text-gray-900 ml-3">
                     Reminder
                   </Text>
                 </Pressable>
@@ -1157,7 +1162,7 @@ const PlannerScreen = () => {
                   onPress={handleEdit}
                 >
                   <Edit size={18} color="#6B7280" />
-                  <Text className="text-sm font-medium text-gray-900 ml-3">
+                  <Text className="text-sm font-Medium text-gray-900 ml-3">
                     Edit
                   </Text>
                 </Pressable>
@@ -1168,7 +1173,7 @@ const PlannerScreen = () => {
                   onPress={handleDelete}
                 >
                   <Trash2 size={18} color="#EF4444" />
-                  <Text className="text-sm font-medium text-red-500 ml-3">
+                  <Text className="text-sm font-Medium text-red-500 ml-3">
                     Delete
                   </Text>
                 </Pressable>

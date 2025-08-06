@@ -159,6 +159,9 @@ const OutfitCreatedScreen = () => {
           <CopyCheck />
         </Pressable>
       </View>
+
+
+
       <ScrollView className="flex-1 bg-white pt-5">
         {/* Product Grid */}
         <FlatList
@@ -174,6 +177,7 @@ const OutfitCreatedScreen = () => {
           contentContainerStyle={{ rowGap: responsiveWidth(3) }}
         />
       </ScrollView>
+
       {selectionMode ? (
         <View className="flex-row justify-between gap-2">
           <Pressable
