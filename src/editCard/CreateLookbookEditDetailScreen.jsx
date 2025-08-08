@@ -15,26 +15,26 @@ import { useNavigation } from "@react-navigation/native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import { Image } from "react-native";
 
-  const DeleteAccountModal = ({ visible,  onCancel, onConfirm }) => {
-    return (
-      <Modal
-        visible={visible}
-        transparent
-        animationType="fade"
-        onRequestClose={onCancel}
+const DeleteAccountModal = ({ visible, onCancel, onConfirm }) => {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+    >
+      <Pressable
+        className="flex-1 bg-black/50 justify-center items-center px-8"
+        activeOpacity={1}
+        onPress={onCancel}
       >
         <Pressable
-          className="flex-1 bg-black/50 justify-center items-center px-8"
+          className="bg-white rounded-3xl p-6 w-full max-w-sm"
           activeOpacity={1}
-          onPress={onCancel}
+          onPress={() => {}} // Prevent closing when touching modal content
         >
-          <Pressable
-            className="bg-white rounded-3xl p-6 w-full max-w-sm"
-            activeOpacity={1}
-            onPress={() => {}} // Prevent closing when touching modal content
-          >
-            {/* User Avatar */}
-            {/* <View className="items-center mb-6">
+          {/* User Avatar */}
+          {/* <View className="items-center mb-6">
               <View className="w-20 h-20 rounded-full overflow-hidden border-4 border-gray-100">
                 <Image
                   source={{
@@ -45,41 +45,41 @@ import { Image } from "react-native";
                 />
               </View>
             </View> */}
-  
-            {/* Modal Title */}
-  
-            {/* Modal Description */}
-            <Text className="text-base font-Medium text-gray-600 text-center mb-8 leading-6">
-             Are you sure, you want to delete?
-            </Text>
-  
-            {/* Action Buttons */}
-            <View className="gap-3">
-              {/* Unblock Button */}
-              <Pressable
-                className="bg-red-500 rounded-2xl py-4 items-center"
-                onPress={onConfirm}
-                activeOpacity={0.8}
-              >
-                <Text className="text-white text-lg font-SemiBold">
-                  Yes, delete it
-                </Text>
-              </Pressable>
-  
-              {/* Cancel Button */}
-              <Pressable
-                className="bg-gray-200 rounded-2xl py-4 items-center"
-                onPress={onCancel}
-                activeOpacity={0.8}
-              >
-                <Text className="text-black text-lg font-SemiBold">Cancel</Text>
-              </Pressable>
-            </View>
-          </Pressable>
+
+          {/* Modal Title */}
+
+          {/* Modal Description */}
+          <Text className="text-base font-Medium text-gray-600 text-center mb-8 leading-6">
+            Are you sure, you want to delete?
+          </Text>
+
+          {/* Action Buttons */}
+          <View className="gap-3">
+            {/* Unblock Button */}
+            <Pressable
+              className="bg-red-500 rounded-2xl py-4 items-center"
+              onPress={onConfirm}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white text-lg font-SemiBold">
+                Yes, delete it
+              </Text>
+            </Pressable>
+
+            {/* Cancel Button */}
+            <Pressable
+              className="bg-gray-200 rounded-2xl py-4 items-center"
+              onPress={onCancel}
+              activeOpacity={0.8}
+            >
+              <Text className="text-black text-lg font-SemiBold">Cancel</Text>
+            </Pressable>
+          </View>
         </Pressable>
-      </Modal>
-    );
-  };
+      </Pressable>
+    </Modal>
+  );
+};
 
 const CreateLookbookEditDetailScreen = () => {
   const navigation = useNavigation();
@@ -115,8 +115,12 @@ const CreateLookbookEditDetailScreen = () => {
       <Pressable
         className={`flex-1 max-w-[48%]`}
         onPress={() => {
-          if (selectionMode) {toggleSelect(item.id)}else{
-            navigation.navigate("CreateLookbookEdit", { item: item });
+          if (selectionMode) {
+            toggleSelect(item.id);
+          } else {
+            navigation.navigate("CreateLookbookEditStack", {
+              screen: "CreateLookbookEdit",
+            });
           }
         }}
       >
@@ -163,8 +167,8 @@ const CreateLookbookEditDetailScreen = () => {
       setSelectedItems([...selectedItems, itemId]);
     }
   };
-    const [showUnblockModal, setShowUnblockModal] = useState(false);
-  
+  const [showUnblockModal, setShowUnblockModal] = useState(false);
+
   return (
     <SafeAreaView
       className="flex-1 bg-white"
@@ -236,11 +240,11 @@ const CreateLookbookEditDetailScreen = () => {
       )}
 
       <DeleteAccountModal
-          visible={showUnblockModal}
-          // user={selectedUser}
-          onCancel={()=> setShowUnblockModal(false)}
-          onConfirm={()=> setShowUnblockModal(false)}
-        />
+        visible={showUnblockModal}
+        // user={selectedUser}
+        onCancel={() => setShowUnblockModal(false)}
+        onConfirm={() => setShowUnblockModal(false)}
+      />
     </SafeAreaView>
   );
 };

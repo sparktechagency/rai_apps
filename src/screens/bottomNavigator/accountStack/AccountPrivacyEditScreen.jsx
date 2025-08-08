@@ -1,4 +1,4 @@
-import { ArrowLeft, Upload } from "lucide-react-native";
+import { ArrowLeft, Eye, Trash2, Upload } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   View,
@@ -20,6 +20,9 @@ import {
 import CustomDatePicker from "../tabComponents/CustomDatePicker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomLocationModal from "../tabComponents/CustomLocationModal";
+import * as ImagePicker from "expo-image-picker";
+import { ViewImageModal } from "../../auth/SetProfileScreen";
+import CameraUI from "../../../components/CameraUI";
 
 const AccountPrivacyEditScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -65,7 +68,7 @@ const AccountPrivacyEditScreen = ({ navigation }) => {
   };
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  
+
   const GenderOption = ({ title }) => (
     <TouchableOpacity
       className="flex-row items-center gap-2"
@@ -81,13 +84,28 @@ const AccountPrivacyEditScreen = ({ navigation }) => {
         }
       </View>
       <Text
-        className={`${gender === title ? "text-violet-500 font-medium" : "text-gray-500"}`}
+        className={`${gender === title ?  "text-violet-500 font-Medium" : "text-gray-500 font-Medium"}`}
       >
         {title}
       </Text>
     </TouchableOpacity>
   );
+  const [image, setImage] = useState(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [showFolderModal, setShowFolderModal] = useState(false);
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setImage(uri);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -128,32 +146,69 @@ const AccountPrivacyEditScreen = ({ navigation }) => {
               Add Profile Photo
             </Text>
 
-            <View
-              className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
-              style={{
-                gap: responsiveHeight(3),
-                paddingVertical: responsiveHeight(5),
-              }}
-            >
-              <Pressable className="items-center justify-center gap-2">
-                <Image
-                  source={require("../../../../assets/images/camera.png")}
-                />
-                <Text className="text-textSecondary text-center font-Medium text-[16px]">
-                  Tap the camera to take a photo
-                </Text>
-              </Pressable>
-
-              <Pressable
-                className="bg-surfaceActionTertiary py-4 rounded-full flex-row items-center justify-center gap-3"
-                style={{ paddingHorizontal: responsiveWidth(5) }}
+            {image ? (
+              <View
+                className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
+                style={{
+                  gap: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(5),
+                }}
               >
-                <Upload size={20} color="#f4f4f4" />
-                <Text className="text-[16px] text-textPrimaryInverted font-SemiBold">
-                  Upload from Gallery
+                <Image
+                  source={require("../../../../assets/images/tick3.png")}
+                />
+                <Text className="text-lg font-Medium">
+                  Photo is successfully uploaded
                 </Text>
-              </Pressable>
-            </View>
+
+                <View className="flex-row gap-2">
+                  <Pressable
+                    onPress={() => setImage(null)}
+                    className="p-4 rounded-2xl bg-red-300/50"
+                  >
+                    <Trash2 color="red" />
+                  </Pressable>
+                  {/* view image */}
+                  <Pressable
+                    onPress={() => setIsImageViewVisible(true)}
+                    className="p-4 rounded-2xl bg-green-300/50"
+                  >
+                    <Eye color="green" />
+                  </Pressable>
+                </View>
+              </View>
+            ) : (
+              <View
+                className="w-full border border-gray-400 border-dashed rounded-xl items-center justify-center"
+                style={{
+                  gap: responsiveHeight(3),
+                  paddingVertical: responsiveHeight(5),
+                }}
+              >
+                <Pressable
+                  onPress={() => setIsCameraActive(true)}
+                  className="items-center justify-center gap-2"
+                >
+                  <Image
+                    source={require("../../../../assets/images/camera.png")}
+                  />
+                  <Text className="text-textSecondary text-center font-Medium text-[16px]">
+                    Tap the camera to take a photo
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={pickImage}
+                  className="bg-surfaceActionTertiary py-4 rounded-full flex-row items-center justify-center gap-3"
+                  style={{ paddingHorizontal: responsiveWidth(5) }}
+                >
+                  <Upload size={20} color="#f4f4f4" />
+                  <Text className="text-[16px] text-textPrimaryInverted font-SemiBold">
+                    Upload from Gallery
+                  </Text>
+                </Pressable>
+              </View>
+            )}
           </View>
 
           {/* Form Fields */}
@@ -242,6 +297,18 @@ const AccountPrivacyEditScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        <ViewImageModal
+          isImageViewVisible={isImageViewVisible}
+          setIsImageViewVisible={setIsImageViewVisible}
+          image={image}
+        />
+
+        <CameraUI
+          isCameraActive={isCameraActive}
+          setIsCameraActive={setIsCameraActive}
+          setPhotoPath={setImage}
+          setShowFolderModal={setShowFolderModal}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

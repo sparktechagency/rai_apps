@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 
-const AddExistingWishlistScreen = () => {
+const AddExistingLookbookScreen = () => {
   const [selectedFolder, setSelectedFolder] = useState(null);
 
   const folders = [
@@ -82,7 +82,12 @@ const AddExistingWishlistScreen = () => {
       {/* Bottom Buttons */}
       <View className=" pt-4 pb-9 bg-white">
         <Pressable
-          onPress={() => navigation.navigate("WishlistFolder")}
+          onPress={() =>
+            navigation.navigate("BottomNavigator", {
+              screen: "Wardrobe",
+              params: { tab: "Lookbooks" },
+            })
+          }
           className={`py-4 rounded-xl items-center mb-3 ${
             selectedFolder ? "bg-surfaceAction" : "bg-gray-200"
           }`}
@@ -97,12 +102,16 @@ const AddExistingWishlistScreen = () => {
           </Text>
         </Pressable>
 
-        <Pressable className="py-4 items-center">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          className="py-4 items-center"
+        >
           <Text className="text-ll font-SemiBold text-textPrimary">Cancel</Text>
         </Pressable>
       </View>
+      
     </SafeAreaView>
   );
 };
 
-export default AddExistingWishlistScreen;
+export default AddExistingLookbookScreen;

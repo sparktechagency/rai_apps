@@ -203,7 +203,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import CameraUI from "../../components/CameraUI";
 
-const ViewImageModal = ({
+export const ViewImageModal = ({
   isImageViewVisible,
   setIsImageViewVisible,
   image,

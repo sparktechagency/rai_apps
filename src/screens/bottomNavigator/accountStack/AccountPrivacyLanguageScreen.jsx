@@ -1,15 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft } from "lucide-react-native";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  StatusBar,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { View, Text, Pressable, StatusBar, ScrollView } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AccountPrivacyLanguageScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("English");
@@ -17,7 +11,6 @@ const AccountPrivacyLanguageScreen = () => {
   const languages = [
     { id: 1, name: "English" },
     { id: 2, name: "Russian" },
-
   ];
 
   const handleBack = () => {
@@ -34,11 +27,16 @@ const AccountPrivacyLanguageScreen = () => {
     else console.log("Go back pressed");
   };
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView
+      className="flex-1 bg-white"
+      style={{
+        padding: responsiveWidth(5),
+      }}
+    >
       {/* <StatusBar barStyle="dark-content" backgroundColor="#ffffff" /> */}
 
       {/* Header */}
-      <View className="flex-row items-center  p-5 ">
+      <View className="flex-row items-center  ">
         <Pressable
           onPress={handleGoBack}
           className="w-10 h-10 items-center justify-center -ml-2"
@@ -56,7 +54,7 @@ const AccountPrivacyLanguageScreen = () => {
         />
       </View>
       {/* Content */}
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
         <Text className="text-[16px] text-textPrimary mt-6 mb-6 font-SemiBold">
           Select your desire language
         </Text>
@@ -72,9 +70,7 @@ const AccountPrivacyLanguageScreen = () => {
                 }`}
                 onPress={() => handleLanguageSelect(language.name)}
               >
-                <Text
-                  className={`text-base text-textPrimary font-Medium `}
-                >
+                <Text className={`text-base text-textPrimary font-Medium `}>
                   {language.name}
                 </Text>
               </Pressable>
@@ -82,11 +78,6 @@ const AccountPrivacyLanguageScreen = () => {
           })}
         </View>
       </ScrollView>
-
-      {/* Bottom Home Indicator */}
-      <View className="items-center py-3 bg-white">
-        <View className="w-[134px] h-[5px] bg-gray-300 rounded-full" />
-      </View>
     </SafeAreaView>
   );
 };

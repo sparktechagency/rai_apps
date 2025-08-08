@@ -1,13 +1,25 @@
-import { View, Text, Image, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import React from "react";
 import { products } from "./ItemTab";
 import { responsiveWidth } from "react-native-responsive-dimensions";
+import { useNavigation } from "@react-navigation/native";
 
 const OutfitTab = ({ tab }) => {
   console.log("LINE AT 6", tab);
+  const navigation = useNavigation();
   
   const renderProductItem = ({ item, index }) => (
-    <View className={`flex-1 max-w-[48%] `}>
+    <Pressable
+      onPress={() => navigation.navigate("CreateOutfitEdit")}
+      className={`flex-1 max-w-[48%] `}
+    >
       {/* Product Image Container */}
       <View className="bg-surfaceSecondary rounded-lg aspect-square items-center justify-center  overflow-hidden relative">
         <Image source={require("../../../../assets/images/lookbook.png")} />
@@ -22,7 +34,7 @@ const OutfitTab = ({ tab }) => {
           {item.description}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
   return (
     <View
@@ -59,8 +71,9 @@ const OutfitTab = ({ tab }) => {
             backgroundColor: "white",
           }}
         >
-          <Image source={require("../../../../assets/images/outfitTab.webp")} 
-          className="px-5 object-cover"
+          <Image
+            source={require("../../../../assets/images/outfitTab.webp")}
+            className="px-5 object-cover"
           />
           <Text className="font-Medium text-[16px] text-textPrimary">
             Fresh looks are waiting for you

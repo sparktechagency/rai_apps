@@ -355,7 +355,7 @@ const SelectionBottomSheet = ({
             {filteredItems.map((item) => (
               <TouchableOpacity
                 key={item}
-                className="flex-row items-center justify-between py-4 border-b border-zinc-200"
+                className={`flex-row items-center justify-between py-4 border-b  ${item === localSelected ? 'border-surfaceAction' :'border-zinc-200'}`}
                 onPress={() => toggleSelection(item)}
               >
                 <Text className="text-base font-Medium text-textPrimary flex-1">

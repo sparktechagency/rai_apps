@@ -6,6 +6,7 @@ import {
   Animated,
   StyleSheet,
 } from 'react-native';
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 
 const CustomLanguageSelector = ({ 
   selectedLanguage = 'ENG',
@@ -32,8 +33,8 @@ const CustomLanguageSelector = ({
       paddingVertical: 4,
     },
     default: { 
-      containerWidth: 70, 
-      containerHeight: 28, 
+      containerWidth: responsiveWidth(20), 
+      containerHeight: responsiveHeight(5), 
       fontSize: 12, 
       paddingHorizontal: 12,
       paddingVertical: 6,
@@ -49,7 +50,7 @@ const CustomLanguageSelector = ({
 
   const config = sizeConfig[size] || sizeConfig.default;
   const selectedIndex = languages.indexOf(selectedLanguage);
-  const segmentWidth = config.containerWidth / languages.length;
+  const segmentWidth = config.containerWidth / languages.length ;
 
   React.useEffect(() => {
     Animated.timing(animatedValue, {
@@ -94,7 +95,7 @@ const CustomLanguageSelector = ({
             styles.languageText,
             {
               fontSize: config.fontSize,
-              color: isActive ? '#FFFFFF' : '#666666',
+              color: isActive ? '#5700FE' : '#5700FE',
               fontWeight: isActive ? '600' : '500',
             },
             textStyle,
@@ -144,7 +145,7 @@ const CustomLanguageSelector = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#F4F4F4',
     borderRadius: 14,
     flexDirection: 'row',
     alignItems: 'center',
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   activeIndicator: {
     position: 'absolute',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#5700FE',
     shadowColor: '#007AFF',
     shadowOffset: {
       width: 0,

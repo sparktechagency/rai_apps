@@ -29,7 +29,7 @@ import {
 } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomBottomSheet from "../components/CustomBottomSheet";
-import { categories, seasons, styles } from "../../assets/data/data";
+import { categories, seasons, styles, stylesList } from "../../assets/data/data";
 import OptionSelector from "../components/OptionSelector";
 import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
@@ -213,22 +213,7 @@ const AddItemEditScreen = () => {
                   paddingVertical: responsiveHeight(5),
                 }}
               >
-                {/* <Pressable className="items-center justify-center gap-2">
-                  <Image source={require("../../assets/images/camera.png")} />
-                  <Text className="text-textSecondary text-center font-Medium text-[16px]">
-                    Tap the camera to take a photo
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  className="bg-surfaceActionTertiary py-4 rounded-full flex-row items-center justify-center gap-3"
-                  style={{ paddingHorizontal: responsiveWidth(5) }}
-                >
-                  <Upload size={20} color="#f4f4f4" />
-                  <Text className="text-[16px] text-textPrimaryInverted font-SemiBold">
-                    Upload from Gallery
-                  </Text>
-                </Pressable> */}
+                
                 {image ? (
                   <View
                     className="items-center justify-center"
@@ -339,7 +324,7 @@ const AddItemEditScreen = () => {
                   Style
                 </Text>
                 <View className="flex-row gap-4 flex-wrap">
-                  {styles.map((opt) => (
+                  {stylesList.map((opt) => (
                     <OptionSelector
                       key={opt}
                       title={opt}

@@ -219,6 +219,6 @@ export const stylesList = [
 
 export const centralModalOption = [
   { id: 1, title: "Add Item", path: "AddItem" },
-  { id: 2, title: "Create an outfit", path: "CreateOutfit" },
+  { id: 2, title: "Create an outfit", path: "CreateOutfitStack" },
   { id: 2, title: "Create lookbook", path: "CreateLookbook" },
 ];

@@ -54,6 +54,7 @@ const WishlistScreen = () => {
       setShowFolderModal(true);
     }
   };
+  
   const AddOptions = ({ visible, onClose }) => {
     const menuItems = [
       {

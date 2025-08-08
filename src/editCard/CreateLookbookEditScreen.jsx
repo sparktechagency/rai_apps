@@ -29,7 +29,7 @@ import {
 } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomBottomSheet from "../components/CustomBottomSheet";
-import { categories, seasons, styles } from "../../assets/data/data";
+import { categories, seasons, styles, stylesList } from "../../assets/data/data";
 import OptionSelector from "../components/OptionSelector";
 import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
@@ -201,7 +201,7 @@ const CreateLookbookEditScreen = () => {
               <ArrowLeft color="#81739A" />
             </Pressable>
             <Text className="flex-1 text-center text-xl font-SemiBold text-textPrimary">
-              Item Details
+              Lookbook Details
             </Text>
             <View
               style={{
@@ -328,7 +328,7 @@ const CreateLookbookEditScreen = () => {
                   Style
                 </Text>
                 <View className="flex-row gap-4 flex-wrap">
-                  {styles.map((opt) => (
+                  {stylesList.map((opt) => (
                     <OptionSelector
                       key={opt}
                       title={opt}

@@ -31,6 +31,7 @@ module.exports = {
         textSecondary: "#5C526D",
         textAction: "#5700FE",
         textTertiary: "#C5BFD1",
+        textSuccess: "#209261",
 
         // border
         borderTertiary: "#D8D4E0",

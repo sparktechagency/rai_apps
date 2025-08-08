@@ -7,6 +7,7 @@ import {
   Switch,
   ScrollView,
   StatusBar,
+  Modal,
 } from "react-native";
 import {
   Bell,
@@ -17,16 +18,81 @@ import {
   Share,
   LogOut,
   ChevronRight,
+  X,
 } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomSwitch from "./tabComponents/CustomSwitch";
 import CustomLanguageSelector from "./tabComponents/CustomLanguageSelector";
 import { useNavigation } from "@react-navigation/native";
 
+
+
+export const SHARE_OPTIONS = [
+  { img: require('../../../assets/images/fb.png'), label: 'Facebook' },
+  { img: require('../../../assets/images/insta.png'), label: 'Instagram' },
+  { img: require('../../../assets/images/x.png'), label: 'X' },
+  { img: require('../../../assets/images/copy.png'), label: 'Copy Link' },
+];
+
+const ShareSheet = ({ visible, onClose }) => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View className="flex-1 justify-end bg-black/40">
+        <View
+          style={{
+            backgroundColor: 'white',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            paddingHorizontal: 20,
+            paddingVertical: 25,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -4 },
+            shadowOpacity: 0.2,
+            shadowRadius: 8,
+            elevation: 10,
+          }}
+        >
+          {/* Header */}
+          <View className="flex-row items-center justify-between mb-5">
+            <Pressable onPress={onClose}>
+              <View className="p-1 rounded-full bg-gray-200">
+                <X size={22} />
+              </View>
+            </Pressable>
+            <Text className="font-bold text-2xl">Share Outfit</Text>
+            <View style={{ width: 32 }} /> {/* Spacer */}
+          </View>
+
+          {/* Options */}
+          <View className="flex-row w-full justify-between gap-2 mt-2">
+            {SHARE_OPTIONS.map((item, index) => (
+              <View key={index} className="justify-center items-center gap-1">
+                <Image
+                  source={item.img}
+                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                />
+                <Text className="font-medium text-base">{item.label}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+
+
 const AccountScreen = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
   const navigation = useNavigation();
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // This would come from your backend API
   const availableLanguages = ["ENG", "RUS"];
@@ -69,7 +135,7 @@ const AccountScreen = () => {
         </View>
 
         {/* Quick Settings Section */}
-        <View className="mb-8">
+        <View className="">
           <Text className="text-lg font-SemiBold text-textPrimary px-5 ">
             Quick Setting
           </Text>
@@ -82,7 +148,7 @@ const AccountScreen = () => {
               <CustomSwitch
                 value={notificationEnabled}
                 onValueChange={setNotificationEnabled}
-                trackColor={{ false: "#E5E5E5", true: "#34C759" }}
+                trackColor={{ false: "#E5E5E5", true: "#5700FE" }}
                 thumbColor="#FFFFFF"
               />
             }
@@ -108,7 +174,7 @@ const AccountScreen = () => {
         </View>
 
         {/* Account Section */}
-        <View className="mb-8">
+        <View className="">
           <Text className="text-lg font-SemiBold text-textPrimary px-5 ">
             Account
           </Text>
@@ -118,7 +184,11 @@ const AccountScreen = () => {
             title="Privacy & Settings"
             className=""
             rightElement={<ChevronRight size={20} stroke="#000" />}
-            onPress={() => navigation.navigate('AccountPrivacyStack')}
+            onPress={() => {
+              navigation.navigate("AccountStack", {
+                screen: "AccountPrivacy", // This is inside the nested AccountPrivacyStack
+              });
+            }}
           />
 
           <MenuItem
@@ -126,7 +196,11 @@ const AccountScreen = () => {
             title="Feedback & Help"
             className=""
             rightElement={<ChevronRight size={20} stroke="#000" />}
-            onPress={() => navigation.navigate('AccountFeedback')}
+            onPress={() =>
+              navigation.navigate("AccountStack", {
+                screen: "AccountFeedback", // This is inside the nested AccountPrivacyStack
+              })
+            }
           />
 
           <MenuItem
@@ -140,7 +214,7 @@ const AccountScreen = () => {
             Icon={Share}
             title="Share Profile"
             className=""
-            onPress={() => console.log("Share Profile pressed")}
+            onPress={() => setShowShareModal(true)}
           />
 
           <MenuItem
@@ -150,6 +224,7 @@ const AccountScreen = () => {
           />
         </View>
       </ScrollView>
+      <ShareSheet visible={showShareModal} onClose={()=>setShowShareModal(false)} />
     </SafeAreaView>
   );
 };

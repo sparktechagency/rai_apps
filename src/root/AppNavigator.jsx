@@ -14,7 +14,6 @@ import SetProfileScreen from "../screens/auth/SetProfileScreen";
 import AddItemScreen from "../create/AddItemScreen";
 import BottomNavigatorScreen from "../screens/bottomNavigator/BottomNavigatorScreen";
 import CreateLookbookScreen from "../create/CreateLookbookScreen";
-import CreateOutfitScreen from "../create/CreateOutfitScreen";
 import AddItemEditScreen from "../editCard/AddItemEditScreen";
 import CreateLookbookEditScreen from "../editCard/CreateLookbookEditScreen";
 import CreateOutfitEditScreen from "../editCard/CreateOutfitEditScreen";
@@ -23,6 +22,9 @@ import NotificationScreen from "../screens/NotificationScreen";
 import CommunityStack from "../screens/communityStack/CommunityStack";
 import WishlistStack from "../screens/wishlistStack/WishlistStack";
 import DressMeStack from "../screens/dressMeStack/DressMeStack";
+import AnalyticsScreen from "../screens/AnalyticsScreen";
+import CreateOutfitStack from "../create/createOutfitStack/CreateOutfitStack";
+import AccountStack from "../screens/bottomNavigator/accountStack/AcountStack";
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
@@ -44,7 +46,7 @@ const AppNavigator = () => {
       {/* add items */}
       <Stack.Screen name="AddItem" component={AddItemScreen} />
       <Stack.Screen name="CreateLookbook" component={CreateLookbookScreen} />
-      <Stack.Screen name="CreateOutfit" component={CreateOutfitScreen} />
+      <Stack.Screen name="CreateOutfitStack" component={CreateOutfitStack} />
 
       {/* edit items */}
       <Stack.Screen name="AddItemEdit" component={AddItemEditScreen} />
@@ -68,6 +70,13 @@ const AppNavigator = () => {
 
       {/*Wishlist*/}
       <Stack.Screen name="DressMeStack" component={DressMeStack} />
+
+      {/* analytics */}
+      <Stack.Screen name="Analytics" component={AnalyticsScreen} />
+
+      {/* account stack */}
+      <Stack.Screen name="AccountStack" component={AccountStack} />
+
     </Stack.Navigator>
   );
 };

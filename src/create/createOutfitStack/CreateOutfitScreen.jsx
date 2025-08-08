@@ -375,10 +375,10 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { categories, seasons } from "../../assets/data/data";
+import { categories, seasons } from "../../../assets/data/data";
 import { Slider } from "@miblanchard/react-native-slider";
-import CustomBottomSheet from "../components/CustomBottomSheet";
-import ColorPalette from "../components/ColorPallete";
+import CustomBottomSheet from "../../components/CustomBottomSheet";
+import ColorPalette from "../../components/ColorPallete";
 
 const { width, height } = Dimensions.get("window");
 
@@ -498,13 +498,13 @@ const AddItemBottomSheet = ({ visible, onCancel, setShowFilterModal }) => {
       >
         {/* Product Image Container */}
         <View className="bg-surfaceSecondary rounded-lg aspect-square items-center justify-center overflow-hidden relative">
-          <Image source={require("../../assets/images/shirt.png")} />
+          <Image source={require("../../../assets/images/shirt.png")} />
 
           {/* Overlay + Tick */}
           {isSelected && (
             <View className="absolute inset-0 bg-black/40 items-center justify-center">
               <Image
-                source={require("../../assets/images/tick2.png")}
+                source={require("../../../assets/images/tick2.png")}
                 style={{
                   width: responsiveWidth(8),
                   height: responsiveWidth(8),
@@ -860,7 +860,11 @@ export default function CreateOutfitScreen() {
               Canvas
             </Text>
 
-            <View className="flex-row gap-2 items-center"></View>
+            <View
+              style={{
+                width: responsiveWidth(10),
+              }}
+            />
           </View>
 
           {/* Canvas Area */}
@@ -885,27 +889,27 @@ export default function CreateOutfitScreen() {
               onPress={undoLast}
               className="p-3 rounded-full border-2 border-gray-300 rotate-180"
             >
-              <FastForward color="gray"/>
+              <FastForward color="gray" />
             </Pressable>
             <Pressable
-              className="p-3 rounded-full bg-surfaceAction"
-              onPress={saveCanvas}
+              className="py-3 px-3.5 rounded-full bg-surfaceAction"
+              // onPress={}
+              onPress={() => {
+                navigation.navigate("SetOutfit");
+              }}
             >
               <Save color="white" />
             </Pressable>
 
-            <Pressable
-              className="p-3 rounded-full border-2 border-gray-300"
-              // onPress={pickImage}
-            >
-              <RotateCcw color="gray"/>
+            <Pressable className="p-3 rounded-full border-2 border-gray-300">
+              <RotateCcw color="gray" />
             </Pressable>
 
             <Pressable
               onPress={clearCanvas}
               className="p-3 rounded-full border-2 border-gray-300"
             >
-              <Trash2  color="gray"/>
+              <Trash2 color="gray" />
             </Pressable>
           </View>
           <Pressable
@@ -914,7 +918,7 @@ export default function CreateOutfitScreen() {
             style={{ bottom: responsiveHeight(3) }}
           >
             <Text className="text-textPrimaryInverted font-SemiBold text-[16px] text-center">
-              Apply
+              Add Items
             </Text>
             <ChevronsUp color="white" />
           </Pressable>

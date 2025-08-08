@@ -57,14 +57,18 @@ const AccountFeedbackScreen = ({ navigation }) => {
   const isFormValid = title.trim() && description.trim();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView
+      className="flex-1 bg-white"
+      style={{
+        padding: responsiveWidth(5),
+      }}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1 "
       >
-        {/* <StatusBar barStyle="dark-content" backgroundColor="#fff" /> */}
         {/* Header */}
-        <View className="flex-row items-center  px-5 ">
+        <View className="flex-row items-center  ">
           <Pressable
             onPress={handleGoBack}
             activeOpacity={0.7}
@@ -88,7 +92,7 @@ const AccountFeedbackScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="px-5 pt-8">
+          <View className="pt-8">
             <Text className="text-3xl font-SemiBold text-black text-center mb-3">
               Did we forget something?
             </Text>
@@ -142,11 +146,7 @@ const AccountFeedbackScreen = ({ navigation }) => {
                 disabled={!isFormValid || isSubmitting}
                 activeOpacity={0.8}
                 className={`p-4 rounded-2xl justify-center items-center shadow-md ${
-                 
-                     isSubmitting
-                      ? "bg-indigo-300"
-                      : "bg-surfaceAction"
-                    
+                  isSubmitting ? "bg-indigo-300" : "bg-surfaceAction"
                 }`}
               >
                 <Text

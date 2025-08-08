@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,9 +15,10 @@ import { responsiveWidth } from "react-native-responsive-dimensions";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AccountPrivacyPasswordNewPasswordScreen = ({ navigation }) => {
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [description2, setDescription2] =useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleGoBack = () => {
     navigation?.goBack?.();
@@ -122,7 +123,7 @@ const AccountPrivacyPasswordNewPasswordScreen = ({ navigation }) => {
                 New Password
               </Text>
               <TextInput
-                className={`border rounded-xl px-4 py-3 min-h-[120px] text-base font-Medium text-black ${
+                className={`border rounded-xl px-4 py-3  text-base font-Medium text-black ${
                   description
                     ? "border-borderAction bg-white"
                     : "border-gray-200 "
@@ -144,15 +145,15 @@ const AccountPrivacyPasswordNewPasswordScreen = ({ navigation }) => {
                 Confirm Password
               </Text>
               <TextInput
-                className={`border rounded-xl px-4 py-3 min-h-[120px] text-base font-Medium text-black ${
+                className={`border rounded-xl px-4 py-3  text-base font-Medium text-black ${
                   description
                     ? "border-borderAction bg-white"
                     : "border-gray-200 "
                 }`}
                 placeholder="Re-type password"
                 placeholderTextColor="#C7C7CC"
-                value={description}
-                onChangeText={setDescription}
+                value={description2}
+                onChangeText={setDescription2}
                 multiline
                 numberOfLines={8}
                 textAlignVertical="top"
