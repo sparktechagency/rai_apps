@@ -34,7 +34,7 @@ const CustomLanguageSelector = ({
     },
     default: { 
       containerWidth: responsiveWidth(20), 
-      containerHeight: responsiveHeight(5), 
+      containerHeight: responsiveHeight(4.5), 
       fontSize: 12, 
       paddingHorizontal: 12,
       paddingVertical: 6,

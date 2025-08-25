@@ -1005,191 +1005,241 @@
 
 // export default SplashScreen;
 
-import React, {useEffect, useRef} from 'react';
-import {View, Animated, StyleSheet, Dimensions} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+// import React, {useEffect, useRef} from 'react';
+// import {View, Animated, StyleSheet, Dimensions} from 'react-native';
+// import {useNavigation} from '@react-navigation/native';
+// import * as SplashScreen from "expo-splash-screen";
+// const {width, height} = Dimensions.get('window');
+
+// const IMG1_WIDTH = 150;
+// const IMG2_WIDTH = 80;
+// const GAP = -20; // no gap between img1 and img2 as requested
+
+// const SplashScreenAnimated = ({ onFinish }) => {
+//   const navigation = useNavigation();
+
+//   const img1Opacity = useRef(new Animated.Value(0)).current;
+
+//   // Container holding img1 and img2
+//   const containerX = useRef(new Animated.Value(0)).current;
+
+//   const img1Scale = useRef(new Animated.Value(0.5)).current;
+
+//   // img2 sliding inside container, starts at offset IMG1_WIDTH (offscreen right)
+//   const img2X = useRef(new Animated.Value(IMG1_WIDTH)).current;
+
+//   const img2Scale = useRef(new Animated.Value(1.5)).current; // fixed scale
+
+//   // img3 sliding below container
+//   const img3X = useRef(new Animated.Value(width)).current;
+//   const img3Scale = useRef(new Animated.Value(2.2)).current;
+
+
+
+// useEffect(() => {
+//   const startAnimation = async () => {
+//     await SplashScreen.hideAsync(); // hide native splash **before** animation starts
+
+//     Animated.sequence([
+//       Animated.timing(img1Opacity, {
+//         toValue: 1,
+//         duration: 800,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(img2X, {
+//         toValue: 0,
+//         duration: 500,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(containerX, {
+//         toValue: -(IMG2_WIDTH + GAP),
+//         duration: 500,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(img3X, {
+//         toValue: 0,
+//         duration: 500,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(img3X, {
+//         toValue: width,
+//         duration: 500,
+//         delay: 800,
+//         useNativeDriver: true,
+//       }),
+//       Animated.timing(img2X, {
+//         toValue: width,
+//         duration: 500,
+//         delay: 300,
+//         useNativeDriver: true,
+//       }),
+//       Animated.sequence([
+//         Animated.timing(containerX, {
+//           toValue: 0,
+//           duration: 500,
+//           useNativeDriver: true,
+//         }),
+//         Animated.timing(img1Scale, {
+//           toValue: 2.2,
+//           duration: 500,
+//           useNativeDriver: true,
+//         }),
+//       ]),
+//     ]).start(() => {
+//       onFinish?.(); // mark splash as complete
+//     });
+//   };
+
+//   startAnimation();
+// }, []);
+
+
+//   return (
+//     <View style={styles.container}>
+//       {/* Container with img1 and img2 */}
+//       <Animated.View
+//         style={{
+//           flexDirection: 'row',
+//           alignItems: 'center',
+//           opacity: img1Opacity,
+//           transform: [{translateX: containerX}],
+//           position: 'absolute',
+//           top: height / 2 - IMG1_WIDTH / 2,
+//           left: width / 2 - IMG1_WIDTH / 2, // center img1 initially
+//         }}>
+//         <Animated.Image
+//           source={require('../../assets/images/img1.png')}
+//           style={{
+//             width: IMG1_WIDTH,
+//             height: IMG1_WIDTH,
+//             transform: [{scale: img1Scale}],
+//           }}
+//           resizeMode="contain"
+//         />
+
+//         <Animated.Image
+//           source={require('../../assets/images/img2.png')}
+//           style={{
+//             width: IMG2_WIDTH,
+//             height: IMG2_WIDTH,
+//             transform: [{translateX: img2X}, {scale: img2Scale}],
+//           }}
+//           resizeMode="contain"
+//         />
+//       </Animated.View>
+
+//       {/* img3 below */}
+//       <Animated.Image
+//         source={require('../../assets/images/img3.png')}
+//         style={{
+//           width: 80,
+//           height: 80,
+//           position: 'absolute',
+//           top: height / 2 + 10,
+//           left: width / 2 - 30,
+//           transform: [{translateX: img3X}, {scale: img3Scale}],
+//         }}
+//         resizeMode="contain"
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//   },
+// });
+
+// export default SplashScreenAnimated;
+
+
+import React, { useEffect, useRef } from 'react';
+import { View, Animated, StyleSheet, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import * as SplashScreen from "expo-splash-screen";
-const {width, height} = Dimensions.get('window');
+
+const { width, height } = Dimensions.get('window');
 
 const IMG1_WIDTH = 150;
 const IMG2_WIDTH = 80;
-const GAP = -20; // no gap between img1 and img2 as requested
+const GAP = -20; // no gap between img1 and img2
 
 const SplashScreenAnimated = ({ onFinish }) => {
   const navigation = useNavigation();
 
   const img1Opacity = useRef(new Animated.Value(0)).current;
-
-  // Container holding img1 and img2
   const containerX = useRef(new Animated.Value(0)).current;
-
   const img1Scale = useRef(new Animated.Value(0.5)).current;
-
-  // img2 sliding inside container, starts at offset IMG1_WIDTH (offscreen right)
   const img2X = useRef(new Animated.Value(IMG1_WIDTH)).current;
+  const img2Scale = useRef(new Animated.Value(1.5)).current;
 
-  const img2Scale = useRef(new Animated.Value(1.5)).current; // fixed scale
+  useEffect(() => {
+    const startAnimation = async () => {
+      await SplashScreen.hideAsync(); // hide native splash before animation starts
 
-  // img3 sliding below container
-  const img3X = useRef(new Animated.Value(width)).current;
-  const img3Scale = useRef(new Animated.Value(2.2)).current;
-
-  // useEffect(() => {
-  //   Animated.sequence([
-  //     // 1. Fade in img1 (and container)
-  //     Animated.timing(img1Opacity, {
-  //       toValue: 1,
-  //       duration: 800,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 2. Slide img2 from right inside container (from IMG1_WIDTH to 0)
-  //     Animated.timing(img2X, {
-  //       toValue: 0,
-  //       duration: 500,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 3. Slide container left by IMG2_WIDTH + GAP to position images nicely
-  //     Animated.timing(containerX, {
-  //       toValue: -(IMG2_WIDTH + GAP),
-  //       duration: 500,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 4. Slide img3 from right below container
-  //     Animated.timing(img3X, {
-  //       toValue: 0,
-  //       duration: 500,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 5. Slide out img3 (right off screen)
-  //     Animated.timing(img3X, {
-  //       toValue: width,
-  //       duration: 500,
-  //       delay: 800,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 6. Slide out img2 (right off screen)
-  //     Animated.timing(img2X, {
-  //       toValue: width,
-  //       duration: 500,
-  //       delay: 300,
-  //       useNativeDriver: true,
-  //     }),
-
-  //     // 7. Slide container back to center and scale img1 from 0.3 to 1
-  //     //   Animated.parallel([
-  //     //     Animated.timing(containerX, {
-  //     //       toValue: 0,
-  //     //       duration: 500,
-  //     //       useNativeDriver: true,
-  //     //     }),
-  //     //     Animated.timing(img1Scale, {
-  //     //       toValue: 2,
-  //     //       duration: 500,
-  //     //       useNativeDriver: true,
-  //     //     }),
-  //     //   ]),
-  //     Animated.sequence([
-  //       // First: Move container to center
-  //       Animated.timing(containerX, {
-  //         toValue: 0,
-  //         duration: 500,
-  //         useNativeDriver: true,
-  //       }),
-  //       // Then: Scale up img1
-  //       Animated.timing(img1Scale, {
-  //         toValue: 2.2,
-  //         duration: 500,
-  //         useNativeDriver: true,
-  //       }),
-  //     ]),
-  //   ]).start(() => {
-  //     // navigation.replace('AppNavigator');
-  //      onFinish?.();
-  //   });
-  // }, [navigation]);
-
-useEffect(() => {
-  const startAnimation = async () => {
-    await SplashScreen.hideAsync(); // hide native splash **before** animation starts
-
-    Animated.sequence([
-      Animated.timing(img1Opacity, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(img2X, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.timing(containerX, {
-        toValue: -(IMG2_WIDTH + GAP),
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.timing(img3X, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.timing(img3X, {
-        toValue: width,
-        duration: 500,
-        delay: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(img2X, {
-        toValue: width,
-        duration: 500,
-        delay: 300,
-        useNativeDriver: true,
-      }),
       Animated.sequence([
-        Animated.timing(containerX, {
+        Animated.timing(img1Opacity, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(img2X, {
           toValue: 0,
           duration: 500,
           useNativeDriver: true,
         }),
-        Animated.timing(img1Scale, {
-          toValue: 2.2,
+        Animated.timing(containerX, {
+          toValue: -(IMG2_WIDTH + GAP),
           duration: 500,
           useNativeDriver: true,
         }),
-      ]),
-    ]).start(() => {
-      onFinish?.(); // mark splash as complete
-    });
-  };
+        Animated.timing(img2X, {
+          toValue: width,
+          duration: 500,
+          delay: 300,
+          useNativeDriver: true,
+        }),
+        Animated.sequence([
+          Animated.timing(containerX, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(img1Scale, {
+            toValue: 2.2,
+            duration: 500,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start(() => {
+        onFinish?.();
+      });
+    };
 
-  startAnimation();
-}, []);
-
+    startAnimation();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Container with img1 and img2 */}
       <Animated.View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
           opacity: img1Opacity,
-          transform: [{translateX: containerX}],
+          transform: [{ translateX: containerX }],
           position: 'absolute',
           top: height / 2 - IMG1_WIDTH / 2,
-          left: width / 2 - IMG1_WIDTH / 2, // center img1 initially
-        }}>
+          left: width / 2 - IMG1_WIDTH / 2,
+        }}
+      >
         <Animated.Image
           source={require('../../assets/images/img1.png')}
           style={{
             width: IMG1_WIDTH,
             height: IMG1_WIDTH,
-            transform: [{scale: img1Scale}],
+            transform: [{ scale: img1Scale }],
           }}
           resizeMode="contain"
         />
@@ -1199,25 +1249,11 @@ useEffect(() => {
           style={{
             width: IMG2_WIDTH,
             height: IMG2_WIDTH,
-            transform: [{translateX: img2X}, {scale: img2Scale}],
+            transform: [{ translateX: img2X }, { scale: img2Scale }],
           }}
           resizeMode="contain"
         />
       </Animated.View>
-
-      {/* img3 below */}
-      <Animated.Image
-        source={require('../../assets/images/img3.png')}
-        style={{
-          width: 80,
-          height: 80,
-          position: 'absolute',
-          top: height / 2 + 10,
-          left: width / 2 - 30,
-          transform: [{translateX: img3X}, {scale: img3Scale}],
-        }}
-        resizeMode="contain"
-      />
     </View>
   );
 };
