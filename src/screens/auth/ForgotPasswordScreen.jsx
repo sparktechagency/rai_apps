@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Eye, EyeClosed, MoveLeft } from "lucide-react-native";
 import React, { useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import {
   View,
   Text,
@@ -19,12 +20,50 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
+import { useForgotPasswordEmailMutation } from "../../redux/slices/authSlice";
 
 const ForgotPasswordScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+
   const navigation = useNavigation();
+  const { control, handleSubmit } = useFormContext();
+
+  const [forgotPasswordEmail, { isLoading }] = useForgotPasswordEmailMutation();
+
+  const handleForgotPassword = async (data) => {
+    console.log("Forgot Data:", data);
+    clearErrors();
+
+    try {
+      const response = await forgotPasswordEmail({
+        email: data.forgotEmail,
+      }).unwrap();
+
+      console.log("✅ Signup Success:", response);
+
+      // 🧹 clear form + errors
+      reset({
+        email: "",
+      });
+
+      // 👉 navigate on success
+      navigation.navigate("VerifyCode");
+    } catch (err) {
+      console.log("❌ Signup Error:", err);
+
+      // Handle different error formats
+      const errorMessage =
+        err?.data?.message || err?.error || "Signup failed. Please try again.";
+
+      setError("root", {
+        type: "manual",
+        message: errorMessage,
+        formType: "forgotPassword",
+      });
+
+      // Show alert for better user feedback
+      // Alert.alert("Signup Failed", errorMessage);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -73,66 +112,60 @@ const ForgotPasswordScreen = () => {
               <Text className="text-[16px] font-Medium text-textPrimary mb-2">
                 Email
               </Text>
-              <TextInput
-                className="border border-borderTertiary rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
-                placeholder="Enter email"
-                placeholderTextColor="#A0A0A0"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
+              <Controller
+                control={control}
+                name="forgotEmail"
+                // rules={{
+                //   required: "Email is required",
+                //   pattern: {
+                //     value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                //     message: "Enter a valid email address",
+                //   },
+                // }}
+                render={({
+                  field: { onChange, onBlur, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <TextInput
+                      className="border border-borderTertiary rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
+                      placeholder="Enter email"
+                      placeholderTextColor="#A0A0A0"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                    />
+                    {error && (
+                      <Text className="text-red-500 text-sm mt-1">
+                        {error.message}
+                      </Text>
+                    )}
+                  </>
+                )}
               />
             </View>
 
-            {/* Password */}
-            {/* <View style={{ marginBottom: responsiveHeight(1) }}>
-              <Text className="text-[16px] font-Medium text-textPrimary mb-2">
-                Password
-              </Text>
-              <View className="flex-row items-center border border-borderTertiary rounded-2xl bg-white">
-                <TextInput
-                  className="flex-1 px-4 py-4 text-base text-gray-900"
-                  placeholder="Enter Password"
-                  placeholderTextColor="#A0A0A0"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
-                <Pressable
-                  className="px-4 py-4"
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <Eye size={20} color={"#C5BFD1"} />
-                  ) : (
-                    <EyeClosed size={20} color={"#C5BFD1"} />
-                  )}
-                </Pressable>
-              </View>
-            </View> */}
-
-            {/* Forgot Password */}
-            {/* <Pressable
-              className="items-end"
-              style={{ marginBottom: responsiveHeight(3) }}
-            >
-              <Text className="text-[16px] text-textAction font-Medium">
-                Forgot Password?
-              </Text>
-            </Pressable> */}
-
-            {/* Login Button */}
+            {/* Send Email */}
             <Pressable
-            onPress={() => navigation.navigate("VerifyCode")}
-              className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
+              onPress={handleSubmit(handleForgotPassword)}
+              // className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
+
+              className={`py-4 rounded-xl flex-row items-center justify-center ${
+                isLoading ? "bg-gray-300" : "bg-surfaceAction"
+              }`}
               style={{ marginBottom: responsiveHeight(3) }}
             >
-              <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+              {/* <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
                 Next
+              </Text> */}
+              <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+                {isLoading ? "Processing..." : "Next"}
               </Text>
             </Pressable>
 
-            {/* Create Account */}
+            {/* Move to Login */}
 
             <Pressable
               onPress={() => navigation.navigate("Login")}
@@ -144,43 +177,6 @@ const ForgotPasswordScreen = () => {
                 Back To Login
               </Text>
             </Pressable>
-
-            {/* Divider */}
-            {/* <View className="flex-row items-center mb-6">
-              <View className="flex-1 h-px bg-gray-200" />
-              <Text className="mx-4 text-base text-textTertiary font-Medium">
-                OR
-              </Text>
-              <View className="flex-1 h-px bg-gray-200" />
-            </View> */}
-
-            {/* Social Buttons */}
-            {/* <View className="flex-row gap-3">
-              <Pressable className="flex-1 bg-surfaceSecondary  rounded-xl py-4 items-center flex-row justify-center gap-2">
-                <Image
-                  source={require("../../../assets/images/google.webp")}
-                  style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
-                  }}
-                />
-                <Text className="text-2xl text-textAction font-SemiBold">
-                  Google
-                </Text>
-              </Pressable>
-              <Pressable className="flex-1 bg-surfaceSecondary  rounded-xl py-4 items-center flex-row justify-center gap-2">
-                <Image
-                  source={require("../../../assets/images/apple.webp")}
-                  style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
-                  }}
-                />
-                <Text className="text-2xl text-textAction font-SemiBold">
-                  Apple
-                </Text>
-              </Pressable>
-            </View> */}
           </ScrollView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

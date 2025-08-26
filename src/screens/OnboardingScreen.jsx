@@ -278,7 +278,7 @@ export default function OnboardingScreen() {
             className="flex-1  justify-center items-center "
             style={{
               position: "absolute",
-              bottom: 3,
+              bottom: responsiveHeight(6),
               left: responsiveWidth(5),
               right: responsiveWidth(5),
             }}
@@ -371,11 +371,11 @@ const styles = StyleSheet.create({
     // flex: 1,
     // backgroundColor: "white",
     // paddingHorizontal: responsiveWidth(5),
-    // // justifyContent: "space-between",
+    // justifyContent: "space-between",
     // paddingTop: responsiveHeight(3),
     // borderTopLeftRadius: responsiveWidth(5),
     // borderTopRightRadius: responsiveWidth(5),
-    // // top: -20,
+    // top: -20,
     position: "absolute",
     bottom: 0,
     left: 0,

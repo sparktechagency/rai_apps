@@ -49,11 +49,12 @@ export const authSlice = baseApi.injectEndpoints({
 
     forgotPasswordEmail: builder.mutation({
       query: (credentials) => ({
-        url: "/auth/forgot-password",
+        url: "/auth/forget-password",
         method: "POST",
         body: credentials,
       }),
     }),
+
     verifyCode: builder.mutation({
       query: (credentials) => {
         console.log("🔐 verifyCode credentials:", credentials); // ✅ Log credentials here
