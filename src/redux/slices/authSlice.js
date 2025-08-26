@@ -1,13 +1,13 @@
-import { jwtDecode } from 'jwt-decode';
-import { baseApi } from '../baseApi.js';
-import { setToken, setUser } from '../reducers/authReducer.js';
+import { jwtDecode } from "jwt-decode";
+import { baseApi } from "../baseApi.js";
+import { setToken, setUser } from "../reducers/authReducer.js";
 
 export const authSlice = baseApi.injectEndpoints({
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     login: builder.mutation({
-      query: credentials => ({
-        url: '/auth/login',
-        method: 'POST',
+      query: (credentials) => ({
+        url: "/auth/signin",
+        method: "POST",
         body: credentials,
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -25,11 +25,14 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     register: builder.mutation({
-      query: credentials => ({
-        url: '/users',
-        method: 'POST',
-        body: credentials,
-      }),
+      query: (credentials) => {
+        console.log("🔐 register credentials:", credentials); // ✅ Log credentials here
+        return {
+          url: "/auth/signup",
+          method: "POST",
+          body: credentials,
+        };
+      },
       // invalidatesTags: ['players'],
       // meta: {
       //   skipAuth: true, // ✅ This tells prepareHeaders to skip Authorization
@@ -37,35 +40,35 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     logout: builder.mutation({
-      query: credentials => ({
-        url: '/auth/logout',
-        method: 'POST',
+      query: (credentials) => ({
+        url: "/auth/logout",
+        method: "POST",
         body: credentials,
       }),
     }),
 
     forgotPasswordEmail: builder.mutation({
-      query: credentials => ({
-        url: '/auth/forgot-password',
-        method: 'POST',
+      query: (credentials) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
         body: credentials,
       }),
     }),
     verifyCode: builder.mutation({
-      query: credentials => {
-        console.log('🔐 verifyCode credentials:', credentials); // ✅ Log credentials here
+      query: (credentials) => {
+        console.log("🔐 verifyCode credentials:", credentials); // ✅ Log credentials here
         return {
-          url: '/auth/verify-otp',
-          method: 'POST',
+          url: "/auth/verify-otp",
+          method: "POST",
           body: credentials,
         };
       },
     }),
 
     resetPassword: builder.mutation({
-      query: credentials => ({
-        url: '/auth/reset-password',
-        method: 'POST',
+      query: (credentials) => ({
+        url: "/auth/reset-password",
+        method: "POST",
         body: credentials,
       }),
 
@@ -75,7 +78,7 @@ export const authSlice = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('Login data:', data);
+          console.log("Login data:", data);
           // dispatch(setToken(data.refresh));
           dispatch(setUser(jwtDecode(data?.data?.accessToken)));
           dispatch(setToken(data?.data?.accessToken)); // ✅ store ACCESS token, not refresh
@@ -87,20 +90,20 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     getProviderProfile: builder.query({
-      query: () => '/users/my-profile',
-      providesTags: ['ProviderProfile'],
+      query: () => "/users/my-profile",
+      providesTags: ["ProviderProfile"],
       meta: {
         skipAuth: false, // or true if you want to skip setting the Authorization header
       },
     }),
 
     updateProfile: builder.mutation({
-      query: credentials => ({
-        url: '/users/update',
-        method: 'PATCH',
+      query: (credentials) => ({
+        url: "/users/update",
+        method: "PATCH",
         body: credentials,
       }),
-      invalidatesTags: ['ProviderProfile'],
+      invalidatesTags: ["ProviderProfile"],
       meta: {
         skipAuth: false,
       },
@@ -108,7 +111,7 @@ export const authSlice = baseApi.injectEndpoints({
 
     getSingleUser: builder.query({
       query: ({ id }) => {
-        console.log('LINE AT 111', id);
+        console.log("LINE AT 111", id);
 
         return `/users/${id}`;
       },
@@ -118,9 +121,9 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     deleteUserAccount: builder.mutation({
-      query: credentials => ({
-        url: '/users/my-account',
-        method: 'PATCH',
+      query: (credentials) => ({
+        url: "/users/my-account",
+        method: "PATCH",
         // body: credentials, // optional, DELETE usually doesn’t need a body
       }),
       meta: {
@@ -154,11 +157,16 @@ export const authSlice = baseApi.injectEndpoints({
 
     sendNotification: builder.mutation({
       query: ({ id, ...credentials }) => {
-        console.log('🔐 sendNotification credentials:', credentials, 'USER ID 157',  id); // ✅ Log credentials here
-        
+        console.log(
+          "🔐 sendNotification credentials:",
+          credentials,
+          "USER ID 157",
+          id
+        ); // ✅ Log credentials here
+
         return {
           url: `/notifications/send-notification/${id}`,
-          method: 'POST',
+          method: "POST",
           body: credentials,
         };
       },
