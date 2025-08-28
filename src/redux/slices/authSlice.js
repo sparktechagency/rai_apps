@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { baseApi } from "../baseApi.js";
-import { setToken, setUser } from "../reducers/authReducer.js";
+import {  clearAuth, setToken, setUser } from "../reducers/authReducer.js";
 
 export const authSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,10 +13,10 @@ export const authSlice = baseApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          // console.log('Login data:', data);
-          // dispatch(setToken(data.refresh));
-          dispatch(setUser(jwtDecode(data?.data?.accessToken)));
-          dispatch(setToken(data?.data?.accessToken)); // ✅ store ACCESS token, not refresh
+          console.log("Login data:", data);
+          dispatch(setToken(data.token));
+          // dispatch(setUser(jwtDecode(data?.data?.accessToken)));
+          // dispatch(setToken(data?.data?.accessToken)); // ✅ store ACCESS token, not refresh
           // dispatch(setUser(jwtDecode(data.access))); // optional
         } catch (error) {
           console.log(error);
@@ -40,12 +40,22 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     logout: builder.mutation({
-      query: (credentials) => ({
-        url: "/auth/logout",
+      query: () => ({
+        url: "/auth/signout",
         method: "POST",
-        body: credentials,
+        // body: credentials,
       }),
+      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          dispatch(clearAuth()); // Clear token and user data
+        } catch (error) {
+          console.log("Logout error:", error);
+        }
+      },
     }),
+
+
 
     forgotPasswordEmail: builder.mutation({
       query: (credentials) => ({
@@ -59,7 +69,7 @@ export const authSlice = baseApi.injectEndpoints({
       query: (credentials) => {
         console.log("🔐 verifyCode credentials:", credentials); // ✅ Log credentials here
         return {
-          url: "/auth/verify-otp",
+          url: "/auth/VerifyOtp",
           method: "POST",
           body: credentials,
         };
@@ -67,27 +77,31 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     resetPassword: builder.mutation({
-      query: (credentials) => ({
-        url: "/auth/reset-password",
-        method: "POST",
-        body: credentials,
-      }),
+      query: (credentials) => {
+        console.log("🔐 resetPassword credentials:", credentials); // ✅ Log credentials here
+
+        return {
+          url: "/auth/reset-password",
+          method: "POST",
+          body: credentials,
+        };
+      },
 
       meta: {
         skipAuth: false, // ✅ This tells prepareHeaders to skip Authorization
       },
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log("Login data:", data);
-          // dispatch(setToken(data.refresh));
-          dispatch(setUser(jwtDecode(data?.data?.accessToken)));
-          dispatch(setToken(data?.data?.accessToken)); // ✅ store ACCESS token, not refresh
-          // dispatch(setUser(jwtDecode(data.access))); // optional
-        } catch (error) {
-          console.log(error);
-        }
-      },
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data } = await queryFulfilled;
+      //     console.log("Login data:", data);
+      //     // dispatch(setToken(data.refresh));
+      //     dispatch(setUser(jwtDecode(data?.data?.accessToken)));
+      //     dispatch(setToken(data?.data?.accessToken)); // ✅ store ACCESS token, not refresh
+      //     // dispatch(setUser(jwtDecode(data.access))); // optional
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // },
     }),
 
     getProviderProfile: builder.query({
@@ -99,15 +113,20 @@ export const authSlice = baseApi.injectEndpoints({
     }),
 
     updateProfile: builder.mutation({
-      query: (credentials) => ({
-        url: "/users/update",
-        method: "PATCH",
-        body: credentials,
-      }),
-      invalidatesTags: ["ProviderProfile"],
-      meta: {
-        skipAuth: false,
+      query: (credentials) => {
+        console.log("🔐 updateProfile credentials:", credentials); // ✅ Log credentials here
+        
+        return {
+
+          url: "/profile/updateProfile",
+          method: "PATCH",
+          body: credentials,
+        }
       },
+      // invalidatesTags: ["UpdateProfile"],
+      // meta: {
+      //   skipAuth: false,
+      // },
     }),
 
     getSingleUser: builder.query({
@@ -184,8 +203,11 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
+
   useForgotPasswordEmailMutation,
+
   useResetPasswordMutation,
+
   useVerifyCodeMutation,
 
   useGetProviderProfileQuery,

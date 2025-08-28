@@ -24,14 +24,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomSwitch from "./tabComponents/CustomSwitch";
 import CustomLanguageSelector from "./tabComponents/CustomLanguageSelector";
 import { useNavigation } from "@react-navigation/native";
-
-
+import { useFormContext } from "react-hook-form";
+import { useLogoutMutation } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { clearAuth } from "../../redux/reducers/authReducer";
 
 export const SHARE_OPTIONS = [
-  { img: require('../../../assets/images/fb.png'), label: 'Facebook' },
-  { img: require('../../../assets/images/insta.png'), label: 'Instagram' },
-  { img: require('../../../assets/images/x.png'), label: 'X' },
-  { img: require('../../../assets/images/copy.png'), label: 'Copy Link' },
+  { img: require("../../../assets/images/fb.png"), label: "Facebook" },
+  { img: require("../../../assets/images/insta.png"), label: "Instagram" },
+  { img: require("../../../assets/images/x.png"), label: "X" },
+  { img: require("../../../assets/images/copy.png"), label: "Copy Link" },
 ];
 
 const ShareSheet = ({ visible, onClose }) => {
@@ -45,12 +47,12 @@ const ShareSheet = ({ visible, onClose }) => {
       <View className="flex-1 justify-end bg-black/40">
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: "white",
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             paddingHorizontal: 20,
             paddingVertical: 25,
-            shadowColor: '#000',
+            shadowColor: "#000",
             shadowOffset: { width: 0, height: -4 },
             shadowOpacity: 0.2,
             shadowRadius: 8,
@@ -74,7 +76,7 @@ const ShareSheet = ({ visible, onClose }) => {
               <View key={index} className="justify-center items-center gap-1">
                 <Image
                   source={item.img}
-                  style={{ width: 50, height: 50, resizeMode: 'contain' }}
+                  style={{ width: 50, height: 50, resizeMode: "contain" }}
                 />
                 <Text className="font-medium text-base">{item.label}</Text>
               </View>
@@ -86,8 +88,6 @@ const ShareSheet = ({ visible, onClose }) => {
   );
 };
 
-
-
 const AccountScreen = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("ENG");
@@ -96,6 +96,7 @@ const AccountScreen = () => {
 
   // This would come from your backend API
   const availableLanguages = ["ENG", "RUS"];
+
   const MenuItem = ({ Icon, title, rightElement, onPress, className }) => (
     <Pressable
       className={`flex-row items-center justify-between p-5  ${className}`}
@@ -109,6 +110,42 @@ const AccountScreen = () => {
       {rightElement}
     </Pressable>
   );
+
+  const { handleSubmit, clearErrors, setError } = useFormContext();
+
+  const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const handleLogout = async (data) => {
+    console.log("Forgot Data:", data);
+    clearErrors();
+
+    try {
+      const response = await logout().unwrap();
+      dispatch(clearAuth());
+      console.log("✅ Signup Success:", response);
+
+      // 👉 navigate on success
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
+    } catch (err) {
+      console.log("❌ Signup Error:", err);
+
+      // Handle different error formats
+      const errorMessage =
+        err?.data?.message || err?.error || "Signup failed. Please try again.";
+
+      setError("root", {
+        type: "manual",
+        message: errorMessage,
+        formType: "logout",
+      });
+
+      // Show alert for better user feedback
+      // Alert.alert("Signup Failed", errorMessage);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -220,11 +257,14 @@ const AccountScreen = () => {
           <MenuItem
             Icon={LogOut}
             title="Logout"
-            onPress={() => console.log("Logout pressed")}
+            onPress={handleSubmit(handleLogout)}
           />
         </View>
       </ScrollView>
-      <ShareSheet visible={showShareModal} onClose={()=>setShowShareModal(false)} />
+      <ShareSheet
+        visible={showShareModal}
+        onClose={() => setShowShareModal(false)}
+      />
     </SafeAreaView>
   );
 };

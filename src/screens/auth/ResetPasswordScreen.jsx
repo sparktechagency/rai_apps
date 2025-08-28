@@ -19,6 +19,8 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from "react-native-responsive-dimensions";
+import { useResetPasswordMutation } from "../../redux/slices/authSlice";
+import { Controller, useFormContext } from "react-hook-form";
 
 const ResetPasswordScreen = () => {
   const [email, setEmail] = useState("");
@@ -27,6 +29,56 @@ const ResetPasswordScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const navigation = useNavigation();
+
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+    setError,
+    reset,
+    getValues,
+  } = useFormContext();
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const { forgotEmail } = getValues();
+  const handleResetPassword = async (data) => {
+    console.log("Forgot Data:", data);
+    clearErrors();
+
+    try {
+      const response = await resetPassword({
+        email: forgotEmail,
+        newPassword: data.resetPassword,
+        confirmPassword: data.resetConfirmPassword,
+      }).unwrap();
+
+      console.log("✅ Signup Success:", response);
+
+      // 🧹 clear form + errors
+      // reset({
+      //   email: "",
+      // });
+
+      // 👉 navigate on success
+      navigation.navigate("ResetPasswordSuccess");
+    } catch (err) {
+      console.log("❌ Reset Error:", err);
+
+      // Handle different error formats
+      const errorMessage =
+        err?.data?.message || err?.error || "Signup failed. Please try again.";
+
+      setError("root", {
+        type: "manual",
+        message: errorMessage,
+        formType: "resetPassword",
+      });
+
+      // Show alert for better user feedback
+      // Alert.alert("Signup Failed", errorMessage);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -67,28 +119,17 @@ const ResetPasswordScreen = () => {
 
           {/* Form Section */}
           <ScrollView
-            contentContainerStyle={{ justifyContent: "center" }}
+            contentContainerStyle={{
+              justifyContent: "center",
+              gap: responsiveHeight(2),
+            }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
             {/* Email */}
-            {/* <View style={{ marginBottom: responsiveHeight(2) }}>
-              <Text className="text-[16px] font-Medium text-textPrimary mb-2">
-                Email
-              </Text>
-              <TextInput
-                className="border border-borderTertiary rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
-                placeholder="Enter email"
-                placeholderTextColor="#A0A0A0"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View> */}
 
             {/* Password */}
-            <View style={{ marginBottom: responsiveHeight(2) }}>
+            {/* <View >
               <Text className="text-[16px] font-Medium text-textPrimary mb-2">
                 New Password
               </Text>
@@ -114,7 +155,7 @@ const ResetPasswordScreen = () => {
               </View>
             </View>
 
-            <View style={{ marginBottom: responsiveHeight(3) }}>
+            <View >
               <Text className="text-[16px] font-Medium text-textPrimary mb-2">
                 Confirm Password
               </Text>
@@ -138,69 +179,132 @@ const ResetPasswordScreen = () => {
                   )}
                 </Pressable>
               </View>
+            </View> */}
+
+            <View>
+              <Text className="text-[16px] font-Medium text-textPrimary mb-2">
+                New Password
+              </Text>
+              <Controller
+                control={control}
+                name="resetPassword"
+                // rules={{
+                //   required: "Password is required",
+                //   minLength: {
+                //     value: 6,
+                //     message: "Password must be at least 6 characters",
+                //   },
+                // }}
+                render={({
+                  field: { onChange, onBlur, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View className="flex-row items-center border border-borderTertiary rounded-2xl bg-white">
+                      <TextInput
+                        className="flex-1 px-4 py-4 text-base text-gray-900"
+                        placeholder="Type a strong password"
+                        placeholderTextColor="#A0A0A0"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        secureTextEntry={!showPassword}
+                      />
+                      <Pressable
+                        className="px-4 py-4"
+                        onPress={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <Eye size={20} color={"#C5BFD1"} />
+                        ) : (
+                          <EyeClosed size={20} color={"#C5BFD1"} />
+                        )}
+                      </Pressable>
+                    </View>
+                    {/* {error && (
+                <Text className="text-red-500 text-sm mt-1">
+                  {error.message}
+                </Text>
+              )} */}
+                  </>
+                )}
+              />
+            </View>
+
+            <View>
+              <Text className="text-[16px] font-Medium text-textPrimary mb-2">
+                Confirm Password
+              </Text>
+              <Controller
+                control={control}
+                name="resetConfirmPassword"
+                // rules={{
+                //   required: "Please confirm your password",
+                //   validate: (value) =>
+                //     value === getValues().password || "Passwords do not match",
+                // }}
+                render={({
+                  field: { onChange, onBlur, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View className="flex-row items-center border border-borderTertiary rounded-2xl bg-white">
+                      <TextInput
+                        className="flex-1 px-4 py-4 text-base text-gray-900"
+                        placeholder="Re-type password"
+                        placeholderTextColor="#A0A0A0"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        secureTextEntry={!showPassword2}
+                      />
+                      <Pressable
+                        className="px-4 py-4"
+                        onPress={() => setShowPassword2(!showPassword2)}
+                      >
+                        {showPassword2 ? (
+                          <Eye size={20} color={"#C5BFD1"} />
+                        ) : (
+                          <EyeClosed size={20} color={"#C5BFD1"} />
+                        )}
+                      </Pressable>
+                    </View>
+                    {/* {error && (
+                <Text className="text-red-500 text-sm mt-1">
+                  {error.message}
+                </Text>
+              )} */}
+                  </>
+                )}
+              />
             </View>
 
             {/* Forgot Password */}
 
             {/* Login Button */}
             <Pressable
-              onPress={() => navigation.navigate("ResetPasswordSuccess")}
-              className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
+              onPress={handleSubmit(handleResetPassword)}
+              // className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
+              className={`py-4 rounded-xl flex-row items-center justify-center ${
+                isLoading ? "bg-gray-300" : "bg-surfaceAction"
+              }`}
               style={{ marginBottom: responsiveHeight(3) }}
             >
-              <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+              {/* <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
                 Save
+              </Text> */}
+              <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
+                {isLoading ? "Processing..." : "Save"}
               </Text>
             </Pressable>
 
-            {/* Create Account */}
-            {/* <View className="flex-row justify-center items-center mb-8">
-              <Text className="text-[14px] text-textSecondary font-Medium">
-                Already have an account? {' '}
-              </Text>
-              <Pressable>
-                <Text className="text-[14px] text-textAction font-Medium">
-                 Login
+            {errors?.root?.formType === "resetPassword" && (
+              <View className="bg-red-50 p-3 rounded-lg border border-red-200">
+                <Text className="text-red-700 text-sm font-Medium text-center">
+                  {errors.root.message}
                 </Text>
-              </Pressable>
-            </View> */}
-
-            {/* Divider */}
-            {/* <View className="flex-row items-center mb-6">
-              <View className="flex-1 h-px bg-gray-200" />
-              <Text className="mx-4 text-base text-textTertiary font-Medium">
-                OR
-              </Text>
-              <View className="flex-1 h-px bg-gray-200" />
-            </View> */}
-
-            {/* Social Buttons */}
-            {/* <View className="flex-row gap-3">
-              <Pressable className="flex-1 bg-surfaceSecondary  rounded-xl py-4 items-center flex-row justify-center gap-2">
-                <Image
-                  source={require("../../../assets/images/google.webp")}
-                  style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
-                  }}
-                />
-                <Text className="text-2xl text-textAction font-SemiBold">
-                  Google
-                </Text>
-              </Pressable>
-              <Pressable className="flex-1 bg-surfaceSecondary  rounded-xl py-4 items-center flex-row justify-center gap-2">
-                <Image
-                  source={require("../../../assets/images/apple.webp")}
-                  style={{
-                    width: responsiveWidth(8),
-                    height: responsiveWidth(8),
-                  }}
-                />
-                <Text className="text-2xl text-textAction font-SemiBold">
-                  Apple
-                </Text>
-              </Pressable>
-            </View> */}
+              </View>
+            )}
           </ScrollView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

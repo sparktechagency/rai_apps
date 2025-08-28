@@ -11,19 +11,19 @@ const authReducer = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
-    setUser: (state, action) => {
-      state.user = action.payload;
-    },
+    // setUser: (state, action) => {
+    //   state.user = action.payload;
+    // },
     // setPlayerType: (state, action) => {
     //   state.player_type = action.payload;
     // },
-    // logout: (state,action)=>{
-    //     state.user = null;
-    //     state.token = null;
-    // }
+    clearAuth: (state)=>{
+        // state.user = null;
+        state.token = null;
+    }
   },
 });
 
-export const {setToken, setUser, setPlayerType} = authReducer.actions;
+export const {setToken, clearAuth } = authReducer.actions;
 
 export default authReducer.reducer;

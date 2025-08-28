@@ -12,6 +12,7 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import { useNavigation } from "@react-navigation/native";
+import { useGetAllItemQuery } from "../../../redux/slices/addItem/addItemSlice";
 
 const categories = [
   { id: "all", name: "All" },
@@ -107,6 +108,8 @@ const ItemTab = ({ tab }) => {
     </Pressable>
   );
 
+  const { data: allItem , isLoading: allItemLoading, isError: allItemError} = useGetAllItemQuery();
+  console.log("LINE AT 144", allItem);
   return (
     <View
       style={{
@@ -119,8 +122,9 @@ const ItemTab = ({ tab }) => {
       }}
     >
       {tab ? (
-        <ScrollView className="flex-1 bg-white"
-        showsVerticalScrollIndicator={false}
+        <ScrollView
+          className="flex-1 bg-white"
+          showsVerticalScrollIndicator={false}
         >
           {/* Category Filter */}
           <FlatList

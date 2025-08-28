@@ -29,7 +29,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomBottomSheet from "../components/CustomBottomSheet";
 import {
-  categories,
+  // categories,
   seasons,
   styles,
   stylesList,
@@ -39,6 +39,12 @@ import ColorPalette from "../components/ColorPallete";
 const options = ["Male", "Female", "Other"];
 import * as ImagePicker from "expo-image-picker";
 import CameraUI from "../components/CameraUI";
+import { Controller, useFormContext } from "react-hook-form";
+import {
+  useCreateAddItemMutation,
+  useGetAllCategoryQuery,
+  useGetAllMaterialQuery,
+} from "../redux/slices/addItem/addItemSlice.js";
 
 const ViewImageModal = ({
   isImageViewVisible,
@@ -70,6 +76,16 @@ const ViewImageModal = ({
 };
 
 const AddItemScreen = () => {
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext();
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedOption2, setSelectedOption2] = useState(null);
 
@@ -84,18 +100,7 @@ const AddItemScreen = () => {
   const [showFolderModal, setShowFolderModal] = useState(false);
 
   const handleGenderSelect = (gender) => setSelectedGender(gender);
-  const handleNext = () => {
-    // setSuccessVisible(true);
-    // setTimeout(() => {
-    //   setSuccessVisible(false);
-    //   // You can also navigate to another screen here, e.g.:
-    //   // navigation.navigate('Home');
-    // }, 2000); // Auto-close after 2 seconds
-    navigation.navigate("BottomNavigator", {
-      screen: "Wardrobe",
-      params: { tab: "Items" },
-    });
-  };
+
   const handleGoBack = () => {
     navigation?.goBack?.();
   };
@@ -111,6 +116,182 @@ const AddItemScreen = () => {
       setImage(uri);
     }
   };
+
+  // const { category, material, season, style } = getValues();
+
+  const category = watch("category");
+  const material = watch("material");
+  const colors = watch("colors") || [];
+  const season = watch("season");
+  const style = watch("style");
+
+  const handleCategorySelect = (selected) => {
+    setValue("category", selected[0] || "");
+  };
+
+  const handleMaterialSelect = (selected) => {
+    setValue("material", selected[0] || "");
+  };
+
+  const handleSeasonSelect = (selectedSeason) => {
+    console.log("Selected Season:", selectedSeason);
+
+    setValue("season", selectedSeason);
+  };
+
+  const handleStyleSelect = (selectedStyle) => {
+    console.log("Selected Style:", selectedStyle);
+    setValue("style", selectedStyle);
+  };
+
+  const [createAddItem, { isLoading }] = useCreateAddItemMutation();
+
+  const {
+    data: categories,
+    isLoading: categoryLoading,
+    error: categoryError,
+  } = useGetAllCategoryQuery();
+  const {
+    data: materials,
+    isLoading: materialLoading,
+    error: materialError,
+  } = useGetAllMaterialQuery();
+  console.log("Categories Data:", categories, materials);
+
+  const handleApply = async (data) => {
+    console.log("Form Data:", data);
+
+    try {
+      // Create FormData object
+      const formData = new FormData();
+
+      // ✅ Append all text fields
+      formData.append("title", data.itemTitle);
+      formData.append("brand", data.itemBrand);
+      formData.append("category", data.category);
+      formData.append("material", data.material);
+      formData.append("season", data.season);
+      formData.append("style", data.style);
+
+      // ✅ Append colors array as JSON string
+      if (data.itemColors && data.itemColors.length > 0) {
+        formData.append("colors", JSON.stringify(data.itemColors));
+      }
+
+      // ✅ Append image file if exists
+      if (image) {
+        const filename = image.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename || "");
+        const type = match ? `image/${match[1]}` : "image/jpeg";
+
+        formData.append("file", {
+          uri: image,
+          type: type,
+          name: filename || "item.jpg",
+        });
+      }
+
+      // // ✅ Log FormData contents for debugging
+      // console.log("FormData being sent:", formData);
+      // for (let [key, value] of formData._parts) {
+      //   if (key === "file" && typeof value === "object") {
+      //     console.log(`${key}:`, {
+      //       uri: value.uri,
+      //       type: value.type,
+      //       name: value.name,
+      //     });
+      //   } else {
+      //     console.log(`${key}:`, value);
+      //   }
+      const response = await createAddItem(formData).unwrap();
+      console.log("✅ Item created successfully:", response);
+
+      navigation.navigate("BottomNavigator", {
+        screen: "Wardrobe",
+        params: { tab: "Items" },
+      });
+    } catch (err) {
+      // ✅ Call the mutation with FormData
+
+      // console.log("✅ Item created successfully:", response);
+
+      // ✅ Show success message or navigate
+      // Alert.alert("Success", "Item added successfully!");
+
+      // ✅ Reset form or navigate away
+      // navigation.goBack();
+      // or reset form values
+
+      // const itemData = {
+      //   title: data.itemTitle,
+      //   brand: data.itemBrand,
+      //   category: data.category,
+      //   material: data.material,
+      //   season: data.season,
+      //   style: data.style,
+      //   colors: data.colors || [], // Direct array, no need to stringify
+      //   // imageUrl: image, // Send the image URI as string
+      // };
+      // console.log("Item Data being sent:", itemData);
+
+      // const response = await createAddItem(itemData).unwrap();
+      // console.log("✅ Item created successfully:", response);
+
+      console.log("❌ Add Item Error:", err);
+      const errorMessage =
+        err?.data?.message || "Add Item failed. Please try again.";
+
+      setError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    }
+  };
+
+  // const handleApply = async (data) => {
+  //   console.log("onSubmit called"); // Add this
+  //   console.log("Form Data:", data);
+  //   clearErrors();
+  //   // try {
+  //   //   const itemData = {
+  //   //     title: data.itemTitle,
+  //   //     brand: data.itemBrand,
+  //   //     category: data.category,
+  //   //     material: data.material,
+  //   //     season: data.season,
+  //   //     style: data.style,
+  //   //     colors: data.colors || [],
+  //   //   };
+  //   //   console.log("Item Data being sent:", itemData); // Add this
+
+  //   //   console.log("createAddItem:", createAddItem); // Add this
+
+  //   //   const response = await createAddItem(itemData).unwrap();
+  //   //   console.log("✅ Item created successfully:", response);
+  //   // } catch (err) {
+  //   //   console.log("❌ Add Item Error:", err);
+  //   //   // ...existing code...
+  //   // }
+
+  //   try {
+  //     console.log("Testing mutation directly");
+  //     const testData = {
+  //       title: data?.itemTitle || "Test Title",
+  //       // brand: data?.itemBrand || "Test Brand",
+  //       // category: data?.category || "Shirt",
+  //       // material: data?.material || "Cotton",
+  //       // season: data?.season || "Summer",
+  //       // style: data?.style || "Casual",
+  //       // colors: ["#3B82F6"],
+  //     };
+  //     console.log("Test Data:", testData);
+
+  //     const response = await createAddItem(testData).unwrap();
+  //     console.log("Direct test success:", response);
+  //   } catch (error) {
+  //     console.log("Direct test error:", error);
+  //   }
+  // };
   return (
     <SafeAreaView className="flex-1 ">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -156,9 +337,10 @@ const AddItemScreen = () => {
             scrollEnabled={true}
             contentContainerStyle={{
               // paddingBottom: responsiveHeight(15),
+              gap: responsiveHeight(3),
             }}
           >
-            <View className="mb-10">
+            <View>
               <Text className="text-[18px] font-semibold text-gray-900 mb-5">
                 Add Profile Photo
               </Text>
@@ -234,16 +416,31 @@ const AddItemScreen = () => {
                 <Text className="text-[16px] font-SemiBold text-textPrimary mb-2">
                   Title
                 </Text>
-                <TextInput
-                  className="border border-borderTertiary focus:border-borderAction rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
-                  placeholder="Enter Title"
-                  placeholderTextColor="#A0A0A0"
-                  value={name}
-                  onChangeText={setName}
+                <Controller
+                  control={control}
+                  name="itemTitle"
+                  // rules={{ required: "Title is required" }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <>
+                      <TextInput
+                        className="border border-borderTertiary focus:border-borderAction rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
+                        placeholder="Enter Title"
+                        placeholderTextColor="#A0A0A0"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                      />
+                      {/* {errors.title && (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {errors.title.message}
+                  </Text>
+                )} */}
+                    </>
+                  )}
                 />
               </View>
 
-              <View>
+              {/* <View>
                 <Text className="text-[16px] font-SemiBold text-textPrimary mb-2">
                   Brand
                 </Text>
@@ -254,21 +451,78 @@ const AddItemScreen = () => {
                   value={username}
                   onChangeText={setUsername}
                 />
+              </View> */}
+
+              <View>
+                <Text className="text-[16px] font-SemiBold text-textPrimary mb-2">
+                  Brand
+                </Text>
+                <Controller
+                  control={control}
+                  name="itemBrand"
+                  // rules={{ required: "Title is required" }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <>
+                      <TextInput
+                        className="border border-borderTertiary focus:border-borderAction rounded-2xl px-4 py-4 text-base text-textPrimary font-Medium bg-white"
+                        placeholder="Enter Title"
+                        placeholderTextColor="#A0A0A0"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                      />
+                      {/* {errors.title && (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {errors.title.message}
+                  </Text>
+                )} */}
+                    </>
+                  )}
+                />
               </View>
 
-              <CustomBottomSheet
+              {/* <CustomBottomSheet
                 title="Category"
                 data={categories}
                 // initialSelected={}
                 onChange={(items) => setSelectedFruits(items)}
+              /> */}
+              {/* <CustomBottomSheet
+                title="Category"
+                data={categories}
+                initialSelected={category ? [category] : []}
+                onChange={handleCategorySelect}
               />
               <CustomBottomSheet
                 title="Material"
-                data={categories}
-                // initialSelected={}
-                onChange={(items) => setSelectedFruits(items)}
+                data={materials}
+                initialSelected={material ? [material] : []}
+                onChange={handleMaterialSelect}
+              /> */}
+
+              <CustomBottomSheet
+                title="Category"
+                data={categories?.styles}
+                initialSelected={category ? [category] : []}
+                onChange={handleCategorySelect}
+                isLoading={categoryLoading}
+                loadingText="Loading categories..."
+                error={categoryError}
+                errorText="Failed to load categories"
               />
-              <ColorPalette />
+
+              <CustomBottomSheet
+                title="Material"
+                data={materials?.Metarial}
+                initialSelected={material ? [material] : []}
+                onChange={handleMaterialSelect}
+                isLoading={materialLoading}
+                loadingText="Loading materials..."
+                error={materialError}
+                errorText="Failed to load materials"
+              />
+
+              <ColorPalette name="itemColors" />
               <View>
                 <Text className="text-[16px] font-SemiBold text-textPrimary mb-2">
                   Season
@@ -278,8 +532,8 @@ const AddItemScreen = () => {
                     <OptionSelector
                       key={opt}
                       title={opt}
-                      selectedValue={selectedOption}
-                      onSelect={setSelectedOption}
+                      selectedValue={season}
+                      onSelect={handleSeasonSelect}
                     />
                   ))}
                 </View>
@@ -293,8 +547,8 @@ const AddItemScreen = () => {
                     <OptionSelector
                       key={opt}
                       title={opt}
-                      selectedValue={selectedOption2}
-                      onSelect={setSelectedOption2}
+                      selectedValue={style}
+                      onSelect={handleStyleSelect}
                     />
                   ))}
                 </View>
@@ -305,7 +559,8 @@ const AddItemScreen = () => {
           {/* Next Button */}
           <Pressable
             className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
-            onPress={handleNext}
+            style={{ marginTop: responsiveHeight(1) }}
+            onPress={handleSubmit(handleApply)}
           >
             <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
               Apply

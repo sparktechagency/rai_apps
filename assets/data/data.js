@@ -222,3 +222,10 @@ export const centralModalOption = [
   { id: 2, title: "Create an outfit", path: "CreateOutfitStack" },
   { id: 2, title: "Create lookbook", path: "CreateLookbook" },
 ];
+
+
+export const gender = [
+  {id:1, title: 'Male', value: 'male'},
+  {id:2, title: 'Female', value: 'female'},
+  {id:3, title: 'Others', value: 'others'},
+]

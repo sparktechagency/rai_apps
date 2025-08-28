@@ -23,9 +23,8 @@ import {
 import { useForgotPasswordEmailMutation } from "../../redux/slices/authSlice";
 
 const ForgotPasswordScreen = () => {
-
   const navigation = useNavigation();
-  const { control, handleSubmit } = useFormContext();
+  const { control, handleSubmit, clearErrors , formState:{errors} , setError, reset} = useFormContext();
 
   const [forgotPasswordEmail, { isLoading }] = useForgotPasswordEmailMutation();
 
@@ -41,9 +40,9 @@ const ForgotPasswordScreen = () => {
       console.log("✅ Signup Success:", response);
 
       // 🧹 clear form + errors
-      reset({
-        email: "",
-      });
+      // reset({
+      //   email: "",
+      // });
 
       // 👉 navigate on success
       navigation.navigate("VerifyCode");
@@ -64,6 +63,8 @@ const ForgotPasswordScreen = () => {
       // Alert.alert("Signup Failed", errorMessage);
     }
   };
+  // console.log(errors.root);
+  
   return (
     <SafeAreaView className="flex-1 bg-white">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -103,12 +104,12 @@ const ForgotPasswordScreen = () => {
 
           {/* Form Section */}
           <ScrollView
-            contentContainerStyle={{ justifyContent: "center" }}
+            contentContainerStyle={{ justifyContent: "center" , gap: responsiveHeight(2)}}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
             {/* Email */}
-            <View style={{ marginBottom: responsiveHeight(2) }}>
+            <View >
               <Text className="text-[16px] font-Medium text-textPrimary mb-2">
                 Email
               </Text>
@@ -150,20 +151,26 @@ const ForgotPasswordScreen = () => {
             {/* Send Email */}
             <Pressable
               onPress={handleSubmit(handleForgotPassword)}
-              // className="bg-surfaceAction py-4 rounded-xl flex-row items-center justify-center"
+          
 
               className={`py-4 rounded-xl flex-row items-center justify-center ${
                 isLoading ? "bg-gray-300" : "bg-surfaceAction"
               }`}
-              style={{ marginBottom: responsiveHeight(3) }}
+             
             >
-              {/* <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
-                Next
-              </Text> */}
+              
               <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">
                 {isLoading ? "Processing..." : "Next"}
               </Text>
             </Pressable>
+
+            {errors?.root?.formType === "forgotPassword" && (
+              <View className="bg-red-50 p-3 rounded-lg border border-red-200">
+                <Text className="text-red-700 text-sm font-Medium text-center">
+                  {errors.root.message}
+                </Text>
+              </View>
+            )}
 
             {/* Move to Login */}
 

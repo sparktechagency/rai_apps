@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { Eye, EyeClosed } from "lucide-react-native";
 import React, { useState } from "react";
 import {
@@ -57,20 +57,28 @@ const LoginScreen = () => {
       });
 
       // 👉 navigate on success
-      navigation.navigate("BottomNavigator");
+      // navigation.navigate("BottomNavigator");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: "BottomNavigator" },
+          ],
+        })
+      );
     } catch (err) {
       console.log("❌ Login Error:", err);
 
       // Handle different error formats
       const errorMessage =
         err?.data?.message || err?.error || "Login failed. Please try again.";
-// err.data.errorMessages.forEach(({ path, message }) => {
-//           const field = path || 'root'; // use 'root' if no specific field
-//           setError(field, {
-//             type: 'server',
-//             message,
-//           });
-//         });
+      // err.data.errorMessages.forEach(({ path, message }) => {
+      //           const field = path || 'root'; // use 'root' if no specific field
+      //           setError(field, {
+      //             type: 'server',
+      //             message,
+      //           });
+      //         });
       setError("root", {
         type: "manual",
         message: errorMessage,
@@ -235,12 +243,12 @@ const LoginScreen = () => {
               <Pressable
                 onPress={handleSubmit(handleLogin)}
                 // disabled={!isValid || isLoading}
-                disabled={ isLoading}
+                disabled={isLoading}
                 // className={`py-4 rounded-xl flex-row items-center justify-center ${
                 //   !isValid || isLoading ? "bg-gray-300" : "bg-surfaceAction"
                 // }`}
                 className={`py-4 rounded-xl flex-row items-center justify-center ${
-                   isLoading ? "bg-gray-300" : "bg-surfaceAction"
+                  isLoading ? "bg-gray-300" : "bg-surfaceAction"
                 }`}
               >
                 <Text className="text-textPrimaryInverted font-SemiBold text-[16px]">

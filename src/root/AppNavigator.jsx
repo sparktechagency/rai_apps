@@ -25,58 +25,80 @@ import DressMeStack from "../screens/dressMeStack/DressMeStack";
 import AnalyticsScreen from "../screens/AnalyticsScreen";
 import CreateOutfitStack from "../create/createOutfitStack/CreateOutfitStack";
 import AccountStack from "../screens/bottomNavigator/accountStack/AcountStack";
+import { useSelector } from "react-redux";
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
+  const token = useSelector((state) => state.auth.token);
+  // console.log("LINE AT 32", token);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-      <Stack.Screen name="VerifyCode" component={VerifyCodeScreen} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      <Stack.Screen
-        name="ResetPasswordSuccess"
-        component={ResetPasswordSuccessScreen}
-      />
-      <Stack.Screen name="SetProfile" component={SetProfileScreen} />
+      {token === null ? (
+        <>
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+          <Stack.Screen name="VerifyCode" component={VerifyCodeScreen} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <Stack.Screen name="SetProfile" component={SetProfileScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="BottomNavigator"
+            component={BottomNavigatorScreen}
+          />
 
-      <Stack.Screen name="BottomNavigator" component={BottomNavigatorScreen} />
+          <Stack.Screen
+            name="ResetPasswordSuccess"
+            component={ResetPasswordSuccessScreen}
+          />
 
-      {/* add items */}
-      <Stack.Screen name="AddItem" component={AddItemScreen} />
-      <Stack.Screen name="CreateLookbook" component={CreateLookbookScreen} />
-      <Stack.Screen name="CreateOutfitStack" component={CreateOutfitStack} />
+          {/* add items */}
+          <Stack.Screen name="AddItem" component={AddItemScreen} />
+          <Stack.Screen
+            name="CreateLookbook"
+            component={CreateLookbookScreen}
+          />
+          <Stack.Screen
+            name="CreateOutfitStack"
+            component={CreateOutfitStack}
+          />
 
-      {/* edit items */}
-      <Stack.Screen name="AddItemEdit" component={AddItemEditScreen} />
-      <Stack.Screen
-        name="CreateOutfitEdit"
-        component={CreateOutfitEditScreen}
-      />
-      <Stack.Screen
-        name="CreateLookbookEditStack"
-        component={CreateLookbookEditStack}
-      />
+          {/* edit items */}
+          <Stack.Screen name="AddItemEdit" component={AddItemEditScreen} />
+          <Stack.Screen
+            name="CreateOutfitEdit"
+            component={CreateOutfitEditScreen}
+          />
+          <Stack.Screen
+            name="CreateLookbookEditStack"
+            component={CreateLookbookEditStack}
+          />
 
-      {/* notifiation */}
-      <Stack.Screen name="Notification" component={NotificationScreen} />
+          {/* notifiation */}
+          <Stack.Screen name="Notification" component={NotificationScreen} />
 
-      {/*community*/}
-      <Stack.Screen name="CommunityStack" component={CommunityStack} />
+          {/*community*/}
+          <Stack.Screen name="CommunityStack" component={CommunityStack} />
 
-      {/*Wishlist*/}
-      <Stack.Screen name="WishlistStack" component={WishlistStack} />
+          {/*Wishlist*/}
+          <Stack.Screen name="WishlistStack" component={WishlistStack} />
 
-      {/*Wishlist*/}
-      <Stack.Screen name="DressMeStack" component={DressMeStack} />
+          {/*Wishlist*/}
+          <Stack.Screen name="DressMeStack" component={DressMeStack} />
 
-      {/* analytics */}
-      <Stack.Screen name="Analytics" component={AnalyticsScreen} />
+          {/* analytics */}
+          <Stack.Screen name="Analytics" component={AnalyticsScreen} />
 
-      {/* account stack */}
-      <Stack.Screen name="AccountStack" component={AccountStack} />
-
+          {/* account stack */}
+          <Stack.Screen name="AccountStack" component={AccountStack} />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

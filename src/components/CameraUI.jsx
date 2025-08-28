@@ -194,7 +194,7 @@ export default function CameraUI({
   const [photoTaken, setPhotoTaken] = useState(false);
   const [photoUri, setPhotoUri] = useState(null);
   const [type, setType] = useState("back");
-  console.log("LINE AT 197", photoUri);
+  // console.log("LINE AT 197", photoUri);
 
   useEffect(() => {
     if (!permission?.granted) {

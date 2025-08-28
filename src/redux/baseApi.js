@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   // baseQuery: fetchBaseQuery({ baseUrl: 'https://basketball-52yg.onrender.com' }),
-  // baseQuery: fetchBaseQuery({ baseUrl: 'http://10.0.60.53:5000/api/v1' }),
+  // baseQuery: fetchBaseQuery({ baseUrl: 'http://10.0.60.53:5000' }),
   // baseQuery: fetchBaseQuery({ baseUrl: 'https://timothy-backend.vercel.app/api/v1' }),
   baseQuery: fetchBaseQuery({ baseUrl: 'https://wardrop.onrender.com' }),
 

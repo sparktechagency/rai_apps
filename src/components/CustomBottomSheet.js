@@ -247,6 +247,7 @@ import {
   Modal,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 
@@ -354,12 +355,12 @@ const SelectionBottomSheet = ({
           >
             {filteredItems.map((item) => (
               <TouchableOpacity
-                key={item}
-                className={`flex-row items-center justify-between py-4 border-b  ${item === localSelected ? 'border-surfaceAction' :'border-zinc-200'}`}
-                onPress={() => toggleSelection(item)}
+                key={item?.id}
+                className={`flex-row items-center justify-between py-4 border-b  ${item?.name === localSelected ? "border-surfaceAction" : "border-zinc-200"}`}
+                onPress={() => toggleSelection(item?.name)}
               >
                 <Text className="text-base font-Medium text-textPrimary flex-1">
-                  {item}
+                  {item?.name}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -389,15 +390,67 @@ const SelectionBottomSheet = ({
   );
 };
 
+// const CustomBottomSheet = ({
+//   title = "Select Item",
+//   data = [],
+//   initialSelected,
+//   onChange,
+// }) => {
+//   const [showModal, setShowModal] = useState(false);
+//   const [selectedItem, setSelectedItem] = useState(initialSelected);
+//   // console.log(selectedItem);
+
+//   const handleApply = (items) => {
+//     setSelectedItem(items[0]);
+//     setShowModal(false);
+//     if (onChange) onChange(items);
+//   };
+
+//   return (
+//     <View className="w-full">
+//       <View className="flex-row justify-between items-center mb-2">
+//         <Text className="text-[16px] font-SemiBold text-textPrimary mb-2">
+//           {title}
+//         </Text>
+//         <Text className="text-[16px] font-Medium text-textPrimary mb-2 border-b border-zinc-300">
+//           {selectedItem || "Not Selected"}
+//         </Text>
+//       </View>
+//       <TouchableOpacity
+//         className="w-full bg-surfaceActionTertiary rounded-2xl py-3 px-6 flex-row items-center justify-center"
+//         onPress={() => setShowModal(true)}
+//         activeOpacity={0.8}
+//       >
+//         <Text className="text-white text-lg font-Medium text-center">
+//           {`---Select ${title}---`}
+//         </Text>
+//         <ChevronsUp size={20} color="white" />
+//       </TouchableOpacity>
+
+//       <SelectionBottomSheet
+//         visible={showModal}
+//         onCancel={() => setShowModal(false)}
+//         onApply={handleApply}
+//         selectedItem={selectedItem}
+//         data={data}
+//         title={title}
+//       />
+//     </View>
+//   );
+// };
+
 const CustomBottomSheet = ({
   title = "Select Item",
   data = [],
   initialSelected,
   onChange,
+  isLoading = false,
+  loadingText = "Loading...",
+  error = null,
+  errorText = "Failed to load data",
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(initialSelected);
-  console.log(selectedItem);
 
   const handleApply = (items) => {
     setSelectedItem(items[0]);
@@ -415,25 +468,48 @@ const CustomBottomSheet = ({
           {selectedItem || "Not Selected"}
         </Text>
       </View>
-      <TouchableOpacity
-        className="w-full bg-surfaceActionTertiary rounded-2xl py-3 px-6 flex-row items-center justify-center"
-        onPress={() => setShowModal(true)}
-        activeOpacity={0.8}
-      >
-        <Text className="text-white text-lg font-Medium text-center">
-          {`---Select ${title}---`}
-        </Text>
-        <ChevronsUp size={20} color="white" />
-      </TouchableOpacity>
 
-      <SelectionBottomSheet
-        visible={showModal}
-        onCancel={() => setShowModal(false)}
-        onApply={handleApply}
-        selectedItem={selectedItem}
-        data={data}
-        title={title}
-      />
+      {/* Error State */}
+      {/* {error ? (
+        <View className="w-full bg-red-100 rounded-2xl py-3 px-6 border border-red-200">
+          <Text className="text-red-700 text-base font-Medium text-center">
+            {errorText}
+          </Text>
+        </View>
+      ) : 
+       */}
+      {/* Loading State */}
+      {isLoading ? (
+        <View className="w-full bg-gray-200 rounded-2xl py-3 px-6 flex-row items-center justify-center">
+          <ActivityIndicator size="small" color="#666666" />
+          <Text className="text-gray-600 text-base font-Medium ml-2">
+            {loadingText}
+          </Text>
+        </View>
+      ) : (
+        <TouchableOpacity
+          className="w-full bg-surfaceActionTertiary rounded-2xl py-3 px-6 flex-row items-center justify-center"
+          onPress={() => setShowModal(true)}
+          activeOpacity={0.8}
+        >
+          <Text className="text-white text-lg font-Medium text-center">
+            {`---Select ${title}---`}
+          </Text>
+          <ChevronsUp size={20} color="white" />
+        </TouchableOpacity>
+      )}
+
+      {/* Modal - Only show when not loading and no error */}
+      {!isLoading && !error && (
+        <SelectionBottomSheet
+          visible={showModal}
+          onCancel={() => setShowModal(false)}
+          onApply={handleApply}
+          selectedItem={selectedItem}
+          data={data}
+          title={title}
+        />
+      )}
     </View>
   );
 };
